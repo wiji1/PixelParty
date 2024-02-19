@@ -74,7 +74,7 @@ public class LeaderboardData {
 		} catch(SQLException e) { throw new RuntimeException(e); }
 
 		for(LeaderboardStatistic stat : LeaderboardStatistic.values()) {
-			leaderboardPositions.add(new LeaderboardPosition(stat, positions[stat.ordinal()], statistics[stat.ordinal()]));
+			leaderboardPositions.add(new LeaderboardPosition(pixelPlayer.uuid, stat, positions[stat.ordinal()], statistics[stat.ordinal()]));
 		}
 	}
 
@@ -90,17 +90,5 @@ public class LeaderboardData {
 		}
 
 		table.updateRow(queryStorage.toArray(new QueryStorage[0]));
-	}
-
-	public static class LeaderboardPosition {
-		public final LeaderboardStatistic statistic;
-		public int position;
-		public int value;
-
-		public LeaderboardPosition(LeaderboardStatistic statistic, int position, int value) {
-			this.statistic = statistic;
-			this.position = position;
-			this.value = value;
-		}
 	}
 }

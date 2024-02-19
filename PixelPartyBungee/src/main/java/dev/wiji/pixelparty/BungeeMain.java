@@ -3,14 +3,12 @@ package dev.wiji.pixelparty;
 import dev.wiji.pixelparty.commands.LobbyCommand;
 import dev.wiji.pixelparty.commands.PlayCommand;
 import dev.wiji.pixelparty.controllers.*;
-
 import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.inspector.IContainerInspector;
 import dev.wiji.pixelparty.inspector.docker.DockerContainerInspector;
 import dev.wiji.pixelparty.inspector.events.MessageEvent;
 import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.messaging.RedisManager;
-import dev.wiji.pixelparty.sql.TableManager;
 import dev.wiji.pixelparty.updater.ServerUpdater;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -39,7 +37,7 @@ public class BungeeMain extends Plugin implements PixelPartyPlugin {
 		INSTANCE = this;
 		getProxy().setReconnectHandler(new ReconnectionHandler());
 		RedisManager.init(this);
-		TableManager.registerTables(this);
+//		TableManager.registerTables(this);
 
 		try {
 			this.loadConfiguration();

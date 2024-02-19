@@ -36,6 +36,6 @@ public class TableManager {
 	}
 
 	public static SQLTable getTable(LeaderboardType type) {
-		return getTable("LeaderboardData" + type.name());
+		return getTable("LeaderboardData" + type.displayName);
 	}
 }

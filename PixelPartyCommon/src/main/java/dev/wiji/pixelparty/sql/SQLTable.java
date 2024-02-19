@@ -252,11 +252,16 @@ public class SQLTable {
 
 	}
 
+	public ResultSet getTop(int amount, Field field) {
+		String query = "SELECT * FROM " + tableName + " ORDER BY " + field.fieldName + " DESC LIMIT " + amount;
+		try {
+			PreparedStatement stmt = connection.prepareStatement(query);
 
-//	SELECT player_id, wins, RANK() OVER (ORDER BY wins DESC) AS position
-//	FROM your_table_name
-//	WHERE player_id = 'specific_player_uuid';
-
+			return executeQuery(stmt);
+		} catch(SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public DatabaseMetaData getMetaData() {
 		try {
@@ -273,7 +278,6 @@ public class SQLTable {
 			if(constraints.indexOf(constraint) != constraints.size() - 1) query.append(" AND ");
 		}
 	}
-
 
 	public void close() {
 		try {

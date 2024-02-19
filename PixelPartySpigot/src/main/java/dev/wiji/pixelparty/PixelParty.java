@@ -7,6 +7,7 @@ import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.events.MessageEvent;
 import dev.wiji.pixelparty.holograms.HologramManager;
 import dev.wiji.pixelparty.inventory.GUIManager;
+import dev.wiji.pixelparty.leaderboard.LeaderboardManager;
 import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.messaging.RedisManager;
 import dev.wiji.pixelparty.objects.Floor;
@@ -63,6 +64,7 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 		getServer().getPluginManager().registerEvents(new PacketManager(), this);
 		getServer().getPluginManager().registerEvents(new HologramManager(), this);
 		getServer().getPluginManager().registerEvents(new PlayerDataManager(), this);
+		getServer().getPluginManager().registerEvents(new LeaderboardManager(), this);
 
 		getCommand("menu").setExecutor(new MenuCommand());
 
