@@ -1,0 +1,21 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'java'
+}
+
+subprojects { subproject ->
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'java'
+
+    group = 'dev.wiji'
+    version = '1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.codemc.org/repository/maven-public/' }
+    }
+
+    dependencies {
+        implementation('redis.clients:jedis:5.1.0')
+    }
+}

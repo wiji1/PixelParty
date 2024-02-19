@@ -1,0 +1,5 @@
+rootProject.name = 'PixelParty'
+include 'PixelPartySpigot'
+include 'PixelPartyBungee'
+include 'PixelPartyCommon'
+

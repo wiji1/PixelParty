@@ -1,0 +1,45 @@
+# Is the docker listener enabled? This is the core functionality and should stay enabled
+# Type: Boolean
+enabled: true
+
+# Outputs extra information
+# Type: Boolean
+debug: true
+
+# Backend type (docker or kubernetes)
+backend: docker
+
+#Where the pre-provided game server volumes are stored
+volumes-path: ~/PixelParty/plugins/PixelPartyBungee/ContainerPresets/
+
+# Ensure the read permissions
+# available schemas: tcp or unix
+# Type: String
+docker:
+  host: unix:///var/run/docker.sock
+
+  # Type: Boolean
+  tsl-verify: false
+
+  # Type: String|null
+  cert-path: ~
+
+  # Type: Section<String, String>
+  registry:
+    # Type: String|null
+    username: ~
+    # Type: String|null
+    password: ~
+    # Type: String|null
+    email: ~
+    # Type: String|null
+    url: ~
+
+  # The network name to resolve IP addresses
+  # Only one network is possible to avoid confusion about which ip to use
+  # check your networks with `docker network ls`
+  network: "minecraft_local"
+
+kubernetes:
+  # The namespace that bungeecord and all minecraft servers reside in
+  namespace: minecraft

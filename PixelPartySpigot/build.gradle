@@ -1,0 +1,17 @@
+group 'dev.wiji'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.codemc.org/repository/maven-public/' }
+}
+
+dependencies {
+    implementation project(':PixelPartyCommon')
+    implementation('net.kyori:adventure-platform-bukkit:4.3.0')
+    compileOnly files('../libs/spigot-1.8.8.jar')
+    compileOnly files('../libs/LuckPerms.jar')
+    implementation files('../libs/ProtocolLib-3.jar')
+    implementation files('../libs/NoteBlockLib-2.0.6-SNAPSHOT.jar')
+    implementation('de.tr7zw:item-nbt-api-plugin:2.8.0')
+}

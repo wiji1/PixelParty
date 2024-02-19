@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+group 'dev.wiji'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://repo.codemc.org/repository/maven-public/" }
+
+}
+
+dependencies {
+    implementation project(':PixelPartyCommon')
+    implementation('com.github.docker-java:docker-java:3.1.5')
+    implementation('redis.clients:jedis:5.1.0')
+    compileOnly 'net.md-5:bungeecord-api:1.15-SNAPSHOT'
+    compileOnly 'com.google.code.gson:gson:2.8.6'
+    compileOnly 'org.slf4j:slf4j-log4j12:2.0.0-alpha1'
+}

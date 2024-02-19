@@ -1,0 +1,7 @@
+name: PixelParty
+main: dev.wiji.pixelparty.PixelParty
+version: 1.0.0
+author: wiji
+commands:
+  test:
+  menu:
