@@ -21,11 +21,11 @@ public class TitleManager {
 		String subtitle;
 
 		if(alivePlayers.size() == 1) {
-			title = Misc.getDisplayName(Bukkit.getOfflinePlayer(alivePlayers.get(0)));
+			title = Misc.getDisplayName(alivePlayers.get(0));
 			subtitle = "&7is the winner of this game!";
 		} else if(alivePlayers.size() == 2) {
-			title = Misc.getDisplayName(Bukkit.getOfflinePlayer(alivePlayers.get(0))) + " &f& " +
-					Misc.getDisplayName(Bukkit.getOfflinePlayer(alivePlayers.get(1)));
+			title = Misc.getDisplayName(alivePlayers.get(0)) + " &f& " +
+					Misc.getDisplayName(alivePlayers.get(1));
 			subtitle = "&7are the winners of this game!";
 		} else {
 			title = "&aIT'S A TIE";

@@ -1,14 +1,12 @@
 package dev.wiji.pixelparty.inventory;
 
-import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.controllers.LobbyManager;
 import dev.wiji.pixelparty.enums.ServerType;
+import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.util.Misc;
 import dev.wiji.pixelparty.util.SkinUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -18,6 +16,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class PracticeSelectorPanel extends InventoryPanel{
@@ -41,13 +40,12 @@ public class PracticeSelectorPanel extends InventoryPanel{
 				ChatColor color = canJoin ? ChatColor.GREEN : ChatColor.RED;
 				int players = pluginMessage.getIntegers().get(0);
 
-				ItemStack head = SkinUtil.getPlayerSkull(SkinUtil.getCachedSkin(owner));
+				ItemStack head = SkinUtil.getPlayerSkull(Objects.requireNonNull(SkinUtil.getCachedSkin(owner)));
 				SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
 				skullMeta.setDisplayName(color + serverName);
 
 				List<String> lore = new ArrayList<>();
-				OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner);
-				lore.add(Misc.color("&7Owner: ") + Misc.getDisplayName(offlinePlayer));
+				lore.add(Misc.color("&7Owner: ") + Misc.getDisplayName(owner));
 				lore.add("");
 				lore.add(Misc.color("&7Players: &e" + players));
 				lore.add("");

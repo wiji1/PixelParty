@@ -12,7 +12,6 @@ import dev.wiji.pixelparty.sql.TableManager;
 import dev.wiji.pixelparty.util.Misc;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -42,8 +41,7 @@ public class LeaderboardManager implements Listener {
 						continue;
 					}
 
-					OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(leaderboardPosition.uuid);
-					String nameText = Misc.getNameAndRank(offlinePlayer);
+					String nameText = Misc.getNameAndRank(leaderboardPosition.uuid);
 					strings.add("&7" + leaderboardPosition.position + ". " + nameText + " &7 - &e" + leaderboardPosition.value);
 				}
 

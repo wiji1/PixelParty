@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public enum ConnectionInfo {
 
-	LEADERBOARD_DATA(TableManager.plugin.getConfigOption("sql-url"),
+	PIXEL_PARTY(TableManager.plugin.getConfigOption("sql-url"),
 			TableManager.plugin.getConfigOption("sql-user"),
 			TableManager.plugin.getConfigOption("sql-pass"),
 			1000L * 60 * 60 * 24 * 30)

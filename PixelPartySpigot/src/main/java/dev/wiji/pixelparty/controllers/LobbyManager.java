@@ -156,6 +156,8 @@ public class LobbyManager implements Listener {
 		PluginMessage message = event.getMessage();
 		List<String> strings = message.getStrings();
 
+		if(strings.size() < 1) return;
+
 		if(strings.get(0).equals("PLAYER COUNTS")) {
 			for(String string : strings.subList(1, strings.size())) {
 				String[] split = string.split(" ");

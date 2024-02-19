@@ -68,6 +68,12 @@ public class SQLTable {
 
 		StringBuilder query = new StringBuilder("INSERT INTO " + tableName + " VALUES (");
 
+		System.out.println("------------------------");
+		for(int i = 0; i < values.length; i++) {
+			System.out.println(values[i].fieldName + " " + values[i].value.getClass() + " " + structure.columns.get(i).type);
+		}
+		System.out.println("------------------------");
+
 		for(int i = 0; i < values.length; i++) {
 
 			if(values[i].value.getClass() != structure.columns.get(i).type)

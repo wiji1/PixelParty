@@ -16,7 +16,7 @@ public class ChatManager implements Listener {
         String originalMessage = event.getMessage();
 
         Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',
-                Misc.getNameAndRank(event.getPlayer()) + "&f: " + originalMessage));
+                Misc.getNameAndRank(event.getPlayer().getUniqueId()) + "&f: " + originalMessage));
     }
 
 }

@@ -4,14 +4,12 @@ import de.tr7zw.nbtapi.NBTItem;
 import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.NBTTag;
 import dev.wiji.pixelparty.util.Misc;
-import dev.wiji.pixelparty.util.SkinUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -94,11 +92,5 @@ public class GUIManager implements Listener {
 				((Player) event.getPlayer()).updateInventory();
 			}
 		}.runTaskLater(PixelParty.INSTANCE, 1L);
-	}
-
-	@EventHandler
-	public void onJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-		SkinUtil.cacheSkin(player);
 	}
 }

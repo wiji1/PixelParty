@@ -1,6 +1,9 @@
 package dev.wiji.pixelparty.util;
 
 import dev.wiji.pixelparty.PixelParty;
+import dev.wiji.pixelparty.sql.Constraint;
+import dev.wiji.pixelparty.sql.SQLTable;
+import dev.wiji.pixelparty.sql.TableManager;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.minecraft.server.v1_8_R3.EntityInsentient;
@@ -8,11 +11,11 @@ import net.minecraft.server.v1_8_R3.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
+import java.sql.ResultSet;
 import java.util.*;
 
 public class Misc {
@@ -46,8 +49,24 @@ public class Misc {
 		}
 	}
 
-	public static String getDisplayName(OfflinePlayer player) {
-		User user = PixelParty.LUCKPERMS.getUserManager().getUser(player.getUniqueId());
+	public static String getDisplayName(Player player) {
+		return getDisplayName(player.getUniqueId());
+	}
+
+	public static String getDisplayName(UUID uuid) {
+
+		String name = "NULL";
+		ResultSet rs = getCachedPlayerData(uuid);
+
+		try {
+			if(rs.next()) {
+				name = rs.getString("name");
+			}
+
+			rs.close();
+		} catch (Exception e) { e.printStackTrace(); }
+
+		User user = PixelParty.LUCKPERMS.getUserManager().getUser(uuid);
 
 		if(user == null) return ChatColor.RED + "ERROR";
 
@@ -55,12 +74,17 @@ public class Misc {
 		assert group != null;
 
 		return ChatColor.translateAlternateColorCodes('&',
-				group.getCachedData().getMetaData().getPrefix() + player.getName());
+				group.getCachedData().getMetaData().getPrefix() + name);
 	}
 
-	public static String getNameAndRank(OfflinePlayer player) {
-		User user = PixelParty.LUCKPERMS.getUserManager().getUser(player.getUniqueId());
+	public static String getNameAndRank(Player player) {
+		return getNameAndRank(player.getUniqueId());
+	}
 
+	public static String getNameAndRank(UUID uuid) {
+		String name = getDisplayName(uuid);
+
+		User user = PixelParty.LUCKPERMS.getUserManager().getUser(uuid);
 		if(user == null) return ChatColor.RED + "ERROR";
 
 		Group group = PixelParty.LUCKPERMS.getGroupManager().getGroup(user.getPrimaryGroup());
@@ -70,7 +94,15 @@ public class Misc {
 		String rankName = group.getName().equals("default") ? "" : "[" + group.getDisplayName() + "] " ;
 
 		return ChatColor.translateAlternateColorCodes('&',
-				groupPrefix + rankName + player.getName());
+				groupPrefix + rankName + name);
+	}
+
+	public static ResultSet getCachedPlayerData(UUID uuid) {
+		SQLTable table = TableManager.getTable("PlayerCache");
+		if(table == null) throw new RuntimeException("SQL Table failed to register!");
+
+		return table.selectRow(new Constraint("uuid", uuid.toString()));
+
 	}
 
 	public static Player getPlayer(UUID uuid){
