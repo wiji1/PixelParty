@@ -1,11 +1,11 @@
 package dev.wiji.pixelparty.controllers;
 
 import dev.wiji.pixelparty.PixelParty;
-import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.enums.Skin;
 import dev.wiji.pixelparty.events.MessageEvent;
 import dev.wiji.pixelparty.inventory.ServerSelectorGUI;
+import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.objects.PacketPlayer;
 import dev.wiji.pixelparty.util.Misc;
 import net.luckperms.api.model.group.Group;

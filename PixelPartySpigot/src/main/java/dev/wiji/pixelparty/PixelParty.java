@@ -17,9 +17,13 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 	public static PixelParty INSTANCE;
@@ -33,6 +37,8 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 
 	public static Player owner = null;
 
+	public FileConfiguration config;
+
 	@Override
 	public void onEnable() {
 		RegisteredServiceProvider<LuckPerms> luckpermsProvider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
@@ -40,6 +46,10 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 
 		INSTANCE = this;
 		serverType = ServerType.getServerType(getServerName());
+		loadConfig();
+		config = YamlConfiguration.loadConfiguration(new File(getDataFolder().getPath() + "/config.yml"));
+
+
 		RedisManager.init(this);
 		TableManager.registerTables(this);
 		PacketInjector.initialise();
@@ -52,6 +62,7 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 		getServer().getPluginManager().registerEvents(new ChatManager(), this);
 		getServer().getPluginManager().registerEvents(new PacketManager(), this);
 		getServer().getPluginManager().registerEvents(new HologramManager(), this);
+		getServer().getPluginManager().registerEvents(new PlayerDataManager(), this);
 
 		getCommand("menu").setExecutor(new MenuCommand());
 
@@ -71,7 +82,6 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 		getCommand("test").setExecutor(new TestCommand());
 		getServer().getPluginManager().registerEvents(new ScoreboardHandler(), this);
 		getServer().getPluginManager().registerEvents(new PowerUpManager(), this);
-		getServer().getPluginManager().registerEvents(new PlayerDataManager(), this);
 		getServer().getPluginManager().registerEvents(new SpectatorManager(), this);
 
 		registerFloors();
@@ -101,7 +111,7 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 
 	@Override
 	public String getConfigOption(String option) {
-		return null;
+		return config.getString(option);
 	}
 
 	public void registerFloors() {
@@ -164,5 +174,10 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 		PowerUp.registerPowerUp(new SpeedPotion());
 		PowerUp.registerPowerUp(new JumpPotion());
 		PowerUp.registerPowerUp(new ColorTrail());
+	}
+
+	private void loadConfig() {
+		getConfig().options().copyDefaults(true);
+		saveConfig();
 	}
 }

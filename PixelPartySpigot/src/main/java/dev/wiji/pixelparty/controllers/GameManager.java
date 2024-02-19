@@ -1,11 +1,13 @@
 package dev.wiji.pixelparty.controllers;
 
 import dev.wiji.pixelparty.PixelParty;
-import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.enums.GameSound;
+import dev.wiji.pixelparty.enums.LeaderboardStatistic;
 import dev.wiji.pixelparty.enums.ServerType;
+import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.objects.PowerUp;
 import dev.wiji.pixelparty.objects.PracticeProfile;
+import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import dev.wiji.pixelparty.util.Color;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -102,7 +104,6 @@ public class GameManager {
 		if(gameState == GameState.ENDING) return;
 
 		if(round >= 2 && round <= 25 && Math.random() > 0.7 && practiceProfile.powerupsEnabled()) PowerUp.createRandomPowerUp();
-//		if(round <= 25) PowerUp.createRandomPowerUp();
 
 		PowerUp.powerUps.forEach(PowerUp::onNextRoundStart);
 
@@ -140,6 +141,16 @@ public class GameManager {
 			ScoreboardHandler.setToDeadTeam(player);
 			PlayerManager.updatePlayers();
 			player.teleport(AmbienceManager.CENTER);
+
+			PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
+
+			if(PixelParty.serverType == ServerType.NORMAL) {
+				pixelPlayer.addStat(LeaderboardStatistic.NORMAL_WINS);
+				pixelPlayer.save();
+			} else if(PixelParty.serverType == ServerType.HYPER) {
+				pixelPlayer.addStat(LeaderboardStatistic.HYPER_WINS);
+				pixelPlayer.save();
+			}
 		}
 
 		new BukkitRunnable() {

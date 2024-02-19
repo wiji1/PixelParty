@@ -1,6 +1,6 @@
 package dev.wiji.pixelparty.controllers;
 
-import dev.wiji.pixelparty.objects.PixelPlayer;
+import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

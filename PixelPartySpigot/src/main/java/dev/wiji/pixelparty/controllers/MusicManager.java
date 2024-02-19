@@ -3,7 +3,7 @@ package dev.wiji.pixelparty.controllers;
 import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.GameSound;
 import dev.wiji.pixelparty.enums.Skin;
-import dev.wiji.pixelparty.objects.PixelPlayer;
+import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import dev.wiji.pixelparty.util.SkinUtil;
 import net.raphimc.noteblocklib.NoteBlockLib;
 import net.raphimc.noteblocklib.model.Note;

@@ -1,6 +1,7 @@
 package dev.wiji.pixelparty.sql;
 
 import dev.wiji.pixelparty.PixelPartyPlugin;
+import dev.wiji.pixelparty.enums.LeaderboardType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +13,14 @@ public class TableManager {
 	public static void registerTables(PixelPartyPlugin instance) {
 		plugin = instance;
 
-		for(TableType value : TableType.values()) {
-			new SQLTable(ConnectionInfo.LEADERBOARD_DATA, "LeaderboardData" + value.name(),
+		for(LeaderboardType value : LeaderboardType.values()) {
+			new SQLTable(ConnectionInfo.LEADERBOARD_DATA, "LeaderboardData" + value.displayName,
 					new TableStructure(
 							new TableColumn(String.class, "uuid", false, true),
 							new TableColumn(Integer.class, "normal_wins", false, false),
 							new TableColumn(Integer.class, "hyper_wins", false, false)
-					));
+					)
+			);
 		}
 	}
 
@@ -33,15 +35,7 @@ public class TableManager {
 		return null;
 	}
 
-	public static enum TableType {
-		WEEKLY("Weekly"),
-		MONTHLY("Monthly"),
-		LIFETIME("Lifetime");
-
-		final String name;
-
-		TableType(String name) {
-			this.name = name;
-		}
+	public static SQLTable getTable(LeaderboardType type) {
+		return getTable("LeaderboardData" + type.name());
 	}
 }

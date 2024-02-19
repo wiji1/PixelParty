@@ -67,7 +67,9 @@ public class SQLTable {
 		if(values.length != structure.columns.size()) throw new RuntimeException("Invalid number of values");
 
 		StringBuilder query = new StringBuilder("INSERT INTO " + tableName + " VALUES (");
+
 		for(int i = 0; i < values.length; i++) {
+
 			if(values[i].value.getClass() != structure.columns.get(i).type)
 				throw new RuntimeException("\nCorrect values: " + String.join(", ", columnStrings));
 
@@ -99,6 +101,28 @@ public class SQLTable {
 			} else {
 				throw new RuntimeException("Invalid QueryStorage type. Must be Constraint or Value");
 			}
+		}
+
+
+		try {
+			ResultSet rs = selectRow(constraints.toArray(new Constraint[0]));
+			if(!rs.next()) {
+				List<QueryStorage> insertStorage = new ArrayList<>();
+
+				for(Constraint constraint : constraints) {
+					insertStorage.add(new Value(constraint.fieldName, constraint.value));
+				}
+
+				insertStorage.addAll(values);
+
+				insertRow(insertStorage.toArray(new Value[0]));
+				rs.close();
+				return;
+			}
+
+			rs.close();
+		} catch(SQLException e) {
+			throw new RuntimeException(e);
 		}
 
 		StringBuilder query = new StringBuilder("UPDATE " + tableName + " SET ");
@@ -182,6 +206,57 @@ public class SQLTable {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public boolean rowExists(QueryStorage... storage) {
+		ResultSet rs = selectRow(storage);
+
+		try {
+			rs.close();
+			return rs.next();
+		} catch(SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public int getPosition(QueryStorage... storage) {
+		List<Constraint> constraints = new ArrayList<>();
+		Field field = null;
+		for(QueryStorage queryStorage : storage) {
+			if(queryStorage instanceof Constraint) {
+				constraints.add((Constraint) queryStorage);
+			} else if(queryStorage instanceof Field) {
+				field = (Field) queryStorage;
+			} else {
+				throw new RuntimeException("Invalid QueryStorage type. Must only contain Constraints and one Field");
+			}
+		}
+
+		if(field == null) throw new RuntimeException("Invalid QueryStorage type. Must only contain Constraints and one Field");
+
+		StringBuilder query = new StringBuilder("SELECT RANK() OVER (ORDER BY " + field.fieldName + " DESC) AS position FROM " + tableName);
+		if(constraints.size() > 0) query.append(" WHERE ");
+		constraint(constraints, query);
+
+		try {
+			PreparedStatement stmt = connection.prepareStatement(query.toString());
+			for(int i = 0; i < constraints.size(); i++) {
+				stmt.setObject(i + 1, constraints.get(i).value);
+			}
+
+			ResultSet rs = executeQuery(stmt);
+			rs.next();
+			return rs.getInt("position");
+		} catch(SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+
+//	SELECT player_id, wins, RANK() OVER (ORDER BY wins DESC) AS position
+//	FROM your_table_name
+//	WHERE player_id = 'specific_player_uuid';
+
 
 	public DatabaseMetaData getMetaData() {
 		try {
