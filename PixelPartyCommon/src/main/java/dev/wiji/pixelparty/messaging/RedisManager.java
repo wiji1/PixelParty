@@ -1,5 +1,6 @@
 package dev.wiji.pixelparty.messaging;
 
+import dev.wiji.pixelparty.PixelPartyPlugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
@@ -8,6 +9,7 @@ import java.util.Locale;
 public class RedisManager {
 	public static PixelPartyPlugin plugin;
 
+	//TODO: Move to config
 	public static Jedis jedisSubscribe = new Jedis("redis://152.70.124.44:6379");
 	public static Jedis jedisPublish = new Jedis("redis://152.70.124.44:6379");
 

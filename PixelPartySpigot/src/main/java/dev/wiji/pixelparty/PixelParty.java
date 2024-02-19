@@ -7,12 +7,12 @@ import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.events.MessageEvent;
 import dev.wiji.pixelparty.holograms.HologramManager;
 import dev.wiji.pixelparty.inventory.GUIManager;
-import dev.wiji.pixelparty.messaging.PixelPartyPlugin;
 import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.messaging.RedisManager;
 import dev.wiji.pixelparty.objects.Floor;
 import dev.wiji.pixelparty.objects.PowerUp;
 import dev.wiji.pixelparty.powerups.*;
+import dev.wiji.pixelparty.sql.TableManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -41,6 +41,7 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 		INSTANCE = this;
 		serverType = ServerType.getServerType(getServerName());
 		RedisManager.init(this);
+		TableManager.registerTables(this);
 		PacketInjector.initialise();
 
 		PluginMessage response = new PluginMessage();
@@ -96,6 +97,11 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 	public void callMessageEvent(PluginMessage message, String channel) {
 		MessageEvent event = new MessageEvent(message, channel);
 		Bukkit.getPluginManager().callEvent(event);
+	}
+
+	@Override
+	public String getConfigOption(String option) {
+		return null;
 	}
 
 	public void registerFloors() {

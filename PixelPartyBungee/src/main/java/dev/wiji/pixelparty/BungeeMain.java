@@ -8,9 +8,9 @@ import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.inspector.IContainerInspector;
 import dev.wiji.pixelparty.inspector.docker.DockerContainerInspector;
 import dev.wiji.pixelparty.inspector.events.MessageEvent;
-import dev.wiji.pixelparty.messaging.PixelPartyPlugin;
 import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.messaging.RedisManager;
+import dev.wiji.pixelparty.sql.TableManager;
 import dev.wiji.pixelparty.updater.ServerUpdater;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -39,6 +39,7 @@ public class BungeeMain extends Plugin implements PixelPartyPlugin {
 		INSTANCE = this;
 		getProxy().setReconnectHandler(new ReconnectionHandler());
 		RedisManager.init(this);
+		TableManager.registerTables(this);
 
 		try {
 			this.loadConfiguration();
@@ -90,6 +91,11 @@ public class BungeeMain extends Plugin implements PixelPartyPlugin {
 	@Override
 	public void callMessageEvent(PluginMessage message, String channel) {
 		getProxy().getPluginManager().callEvent(new MessageEvent(message, channel));
+	}
+
+	@Override
+	public String getConfigOption(String option) {
+		return null;
 	}
 
 	private void bootstrapServerUpdater(Configuration configuration) {
