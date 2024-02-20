@@ -1,13 +1,12 @@
 package dev.wiji.pixelparty.controllers;
 
 import dev.wiji.pixelparty.PixelParty;
-import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.enums.*;
+import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.objects.PowerUp;
 import dev.wiji.pixelparty.objects.PracticeProfile;
+import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import dev.wiji.pixelparty.util.Misc;
-import net.luckperms.api.model.group.Group;
-import net.luckperms.api.model.user.User;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import org.bukkit.Bukkit;
@@ -217,13 +216,12 @@ public class PlayerManager implements Listener {
 	}
 
 	public static void giveBoots(Player player) {
-		User user = PixelParty.LUCKPERMS.getUserManager().getUser(player.getUniqueId());
-		assert user != null;
-		Group group = PixelParty.LUCKPERMS.getGroupManager().getGroup(user.getPrimaryGroup());
+		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
+		Group group = pixelPlayer.getGroup();
 
 		ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
 		LeatherArmorMeta meta = (LeatherArmorMeta) boots.getItemMeta();
-		meta.setColor(BootColor.fromGroup(group).getColor());
+		meta.setColor(group.getColor());
 		boots.setItemMeta(meta);
 		player.getInventory().setBoots(boots);
 	}

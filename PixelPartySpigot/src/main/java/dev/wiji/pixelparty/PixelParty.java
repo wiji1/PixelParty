@@ -15,13 +15,11 @@ import dev.wiji.pixelparty.objects.PowerUp;
 import dev.wiji.pixelparty.powerups.*;
 import dev.wiji.pixelparty.sql.TableManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -34,17 +32,12 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 
 	public static GameManager gameManager;
 
-	public static LuckPerms LUCKPERMS;
-
 	public static Player owner = null;
 
 	public FileConfiguration config;
 
 	@Override
 	public void onEnable() {
-		RegisteredServiceProvider<LuckPerms> luckpermsProvider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
-		if(luckpermsProvider != null) LUCKPERMS = luckpermsProvider.getProvider();
-
 		INSTANCE = this;
 		serverType = ServerType.getServerType(getServerName());
 		loadConfig();

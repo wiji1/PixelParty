@@ -1,5 +1,6 @@
 package dev.wiji.pixelparty.playerdata;
 
+import dev.wiji.pixelparty.enums.Group;
 import dev.wiji.pixelparty.enums.LeaderboardStatistic;
 import dev.wiji.pixelparty.enums.LeaderboardType;
 import dev.wiji.pixelparty.sql.*;
@@ -19,6 +20,7 @@ public class PixelPlayer {
 	public static List<PixelPlayer> pixelPlayers = new ArrayList<>();
 
 	public UUID uuid;
+	public Group userGroup = Group.DEFAULT;
 
 	public Integer volume = 50;
 	public Boolean pausedMusic = false;
@@ -65,12 +67,9 @@ public class PixelPlayer {
 			} catch(NoSuchMethodException e) { throw new RuntimeException(e); }
 
 			try {
-				System.out.println(name);
-				System.out.println(method);
 				Object value = method.invoke(rs, name);
 				if(toDeserialize) {
 					Method fromString = type.getMethod("fromString", String.class);
-					System.out.println(value);
 					value = fromString.invoke(null, (String) value);
 				}
 				field.set(this, value);
@@ -134,6 +133,10 @@ public class PixelPlayer {
 
 	public int getLeaderboardPosition(LeaderboardType type, LeaderboardStatistic stat) {
 		return leaderboardData[type.ordinal()].getPosition(stat);
+	}
+
+	public Group getGroup() {
+		return userGroup;
 	}
 
 	public static PixelPlayer getPixelPlayer(Player player) {

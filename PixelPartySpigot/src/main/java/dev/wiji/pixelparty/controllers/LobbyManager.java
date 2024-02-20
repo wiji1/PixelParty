@@ -1,17 +1,16 @@
 package dev.wiji.pixelparty.controllers;
 
 import dev.wiji.pixelparty.PixelParty;
+import dev.wiji.pixelparty.enums.Group;
 import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.enums.Skin;
 import dev.wiji.pixelparty.events.MessageEvent;
 import dev.wiji.pixelparty.inventory.ServerSelectorGUI;
 import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.objects.PacketPlayer;
+import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import dev.wiji.pixelparty.util.Misc;
-import net.luckperms.api.model.group.Group;
-import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,12 +40,10 @@ public class LobbyManager implements Listener {
 	public static Map<ServerType, Integer> playerCounts = new HashMap<>();
 
 	public LobbyManager() {
-		for(Group group : PixelParty.LUCKPERMS.getGroupManager().getLoadedGroups()) {
-			String prefix = group.getCachedData().getMetaData().getPrefix();
-			assert prefix != null;
+		for(Group group : Group.values()) {
 
-			Team playerList = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(group.getName());
-			playerList.setPrefix(ChatColor.translateAlternateColorCodes('&', prefix));
+			Team playerList = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(group.name());
+			playerList.setPrefix(group.getChatColor().toString());
 		}
 
 		lobbyNPCs.add(new PacketPlayer(Misc.color("&e&lNORMAL"), Skin.NORMAL) {
@@ -141,13 +138,10 @@ public class LobbyManager implements Listener {
 			for(PacketPlayer lobbyNPC : lobbyNPCs) lobbyNPC.spawnForPlayer(player);
 		}, 5);
 
+		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
+		Group group = pixelPlayer.getGroup();
 
-		User user = PixelParty.LUCKPERMS.getUserManager().getUser(player.getUniqueId());
-		if(user == null) return;
-		Group group = PixelParty.LUCKPERMS.getGroupManager().getGroup(user.getPrimaryGroup());
-
-		if(group == null) return;
-		Team playerList = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(group.getName());
+		Team playerList = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(group.name());
 		playerList.addPlayer(player);
 	}
 

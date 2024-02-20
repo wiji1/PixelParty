@@ -1,11 +1,10 @@
 package dev.wiji.pixelparty.util;
 
-import dev.wiji.pixelparty.PixelParty;
+import dev.wiji.pixelparty.enums.Group;
+import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import dev.wiji.pixelparty.sql.Constraint;
 import dev.wiji.pixelparty.sql.SQLTable;
 import dev.wiji.pixelparty.sql.TableManager;
-import net.luckperms.api.model.group.Group;
-import net.luckperms.api.model.user.User;
 import net.minecraft.server.v1_8_R3.EntityInsentient;
 import net.minecraft.server.v1_8_R3.EntityTypes;
 import org.bukkit.Bukkit;
@@ -55,26 +54,29 @@ public class Misc {
 
 	public static String getDisplayName(UUID uuid) {
 
+		Group group = Group.DEFAULT;
 		String name = "NULL";
-		ResultSet rs = getCachedPlayerData(uuid);
 
-		try {
-			if(rs.next()) {
-				name = rs.getString("name");
-			}
+		Player player = getPlayer(uuid);
+		if(player != null) {
+			PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
+			group = pixelPlayer.getGroup();
+			name = player.getDisplayName();
+		} else {
+			ResultSet rs = getCachedPlayerData(uuid);
 
-			rs.close();
-		} catch (Exception e) { e.printStackTrace(); }
+			try {
+				if(rs.next()) {
+					name = rs.getString("name");
+				}
 
-		User user = PixelParty.LUCKPERMS.getUserManager().getUser(uuid);
+				rs.close();
+			} catch (Exception e) { e.printStackTrace(); }
 
-		if(user == null) return ChatColor.RED + "ERROR";
-
-		Group group = PixelParty.LUCKPERMS.getGroupManager().getGroup(user.getPrimaryGroup());
-		assert group != null;
+		}
 
 		return ChatColor.translateAlternateColorCodes('&',
-				group.getCachedData().getMetaData().getPrefix() + name);
+				group.getChatColor() + name);
 	}
 
 	public static String getNameAndRank(Player player) {
@@ -84,14 +86,17 @@ public class Misc {
 	public static String getNameAndRank(UUID uuid) {
 		String name = getDisplayName(uuid);
 
-		User user = PixelParty.LUCKPERMS.getUserManager().getUser(uuid);
-		if(user == null) return ChatColor.RED + "ERROR";
+		Group group;
+		Player player = getPlayer(uuid);
+		if(player != null) {
+			PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
+			group = pixelPlayer.getGroup();
+		} else {
+			group = Group.getGroup(uuid);
+		}
 
-		Group group = PixelParty.LUCKPERMS.getGroupManager().getGroup(user.getPrimaryGroup());
-		assert group != null;
-
-		String groupPrefix = group.getCachedData().getMetaData().getPrefix();
-		String rankName = group.getName().equals("default") ? "" : "[" + group.getDisplayName() + "] " ;
+		String groupPrefix = group.getChatColor().toString();
+		String rankName = group == Group.DEFAULT ? "" : "[" + group.getDisplayName() + "] " ;
 
 		return ChatColor.translateAlternateColorCodes('&',
 				groupPrefix + rankName + name);

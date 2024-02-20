@@ -1,10 +1,10 @@
 package dev.wiji.pixelparty.controllers;
 
 import dev.wiji.pixelparty.PixelParty;
+import dev.wiji.pixelparty.enums.Group;
 import dev.wiji.pixelparty.objects.PixelScoreboard;
+import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import dev.wiji.pixelparty.util.Misc;
-import net.luckperms.api.model.group.Group;
-import net.luckperms.api.model.user.User;
 import net.minecraft.server.v1_8_R3.Scoreboard;
 import net.minecraft.server.v1_8_R3.ScoreboardTeam;
 import org.bukkit.Bukkit;
@@ -69,15 +69,13 @@ public class ScoreboardHandler implements Listener {
 		}.runTaskTimer(PixelParty.INSTANCE, 0, 5);
 
 
+		for(Group group : Group.values()) {
+			String prefix = group.getChatColor().toString();
 
-		for(Group group : PixelParty.LUCKPERMS.getGroupManager().getLoadedGroups()) {
-			String prefix = group.getCachedData().getMetaData().getPrefix();
-			assert prefix != null;
-
-			Team playerList = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(group.getName());
+			Team playerList = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(group.name());
 			playerList.setPrefix(ChatColor.translateAlternateColorCodes('&', prefix));
 
-			Team nameTags = preGame.getScoreboard().registerNewTeam(group.getName());
+			Team nameTags = preGame.getScoreboard().registerNewTeam(group.name());
 			nameTags.setPrefix(ChatColor.translateAlternateColorCodes('&', prefix));
 		}
 	}
@@ -86,15 +84,14 @@ public class ScoreboardHandler implements Listener {
 	public void PlayerJoin(PlayerJoinEvent e) {
 		Player player = e.getPlayer();
 
-		User user = PixelParty.LUCKPERMS.getUserManager().getUser(player.getUniqueId());
-		assert user != null;
-		Group group = PixelParty.LUCKPERMS.getGroupManager().getGroup(user.getPrimaryGroup());
+		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
+		Group group = pixelPlayer.getGroup();
 
-		assert group != null;
-		Team playerList = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(group.getName());
+
+		Team playerList = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(group.name());
 		playerList.addPlayer(player);
 
-		Team nameTags = preGame.getScoreboard().getTeam(group.getName());
+		Team nameTags = preGame.getScoreboard().getTeam(group.name());
 		nameTags.addPlayer(player);
 
 		PixelScoreboard scoreboard = getScoreboard(game.gameState);
