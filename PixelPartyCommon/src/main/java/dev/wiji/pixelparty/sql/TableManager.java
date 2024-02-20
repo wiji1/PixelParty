@@ -2,7 +2,10 @@ package dev.wiji.pixelparty.sql;
 
 import dev.wiji.pixelparty.PixelPartyPlugin;
 import dev.wiji.pixelparty.enums.LeaderboardType;
+import dev.wiji.pixelparty.playerdata.PixelPlayer;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,30 @@ public class TableManager {
 					new TableColumn(String.class, "skin_signature", false, false, 1000)
 			)
 
+		);
+
+
+		List<TableColumn> pixelPlayerFields = new ArrayList<>();
+
+		int validFields = 0;
+
+		for(Field field : PixelPlayer.class.getDeclaredFields()) {
+			if(Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) continue;
+
+			Class<?> type = field.getType();
+
+			try {
+				TableStructure.Clazz.valueOf(type.getSimpleName());
+			} catch(IllegalArgumentException e) {
+				type = String.class;
+			}
+
+			pixelPlayerFields.add(new TableColumn(type, field.getName(), false, validFields == 0));
+			validFields++;
+		}
+
+		new SQLTable(ConnectionInfo.PIXEL_PARTY, "PlayerData",
+			new TableStructure(pixelPlayerFields.toArray(new TableColumn[0]))
 		);
 	}
 

@@ -149,7 +149,7 @@ public class TableStructure {
 
 	}
 
-	enum Clazz {
+	public enum Clazz {
 		String,
 		Integer,
 		Long,
