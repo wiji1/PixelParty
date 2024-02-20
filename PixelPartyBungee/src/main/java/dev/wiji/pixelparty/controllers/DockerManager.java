@@ -48,10 +48,10 @@ public class DockerManager {
 
 		while(!ServerManager.checkCodeAvailability(gameServer.code)) gameServer.code = generateRandomCode();
 
-		String hostDirectory = BungeeMain.INSTANCE.getConfiguration().get("container-inspector")
+		String hostDirectory = BungeeMain.INSTANCE.getConfiguration()
 				.getString("volumes-path") + gameServer.serverType.name().toLowerCase();
 
-		String globalDirectory = BungeeMain.INSTANCE.getConfiguration().get("container-inspector")
+		String globalDirectory = BungeeMain.INSTANCE.getConfiguration()
 				.getString("volumes-path") + "global";
 
 		Bind hostBind = new Bind(hostDirectory, new Volume("/config"));

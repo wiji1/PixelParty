@@ -1,3 +1,4 @@
 sql-url: ""
 sql-user: ""
 sql-password: ""
+redis-url: ""

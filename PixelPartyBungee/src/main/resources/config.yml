@@ -1,0 +1,61 @@
+# General Config
+
+sql-url: ""
+sql-user: ""
+sql-pass: ""
+
+redis-url: ""
+
+
+# Docker Inspector Config
+
+enabled: true
+debug: true
+
+# Backend type (docker or kubernetes)
+backend: docker
+
+volumes-path: /home/ubuntu/PixelParty/plugins/PixelPartyBungee/ContainerPresets/
+
+docker:
+  host: unix:///var/run/docker.sock
+
+  # Type: Boolean
+  tsl-verify: false
+
+  # Type: String|null
+  cert-path: ~
+
+  # Type: Section<String, String>
+  registry:
+    # Type: String|null
+    username: ~
+    # Type: String|null
+    password: ~
+    # Type: String|null
+    email: ~
+    # Type: String|null
+    url: ~
+
+  network: "minecraft_local"
+
+
+# Server Updater Config
+
+add-actions:
+  - "bootstrap"
+  - "start"
+  - "unpause"
+
+remove-actions:
+  - "die"
+  - "stop"
+  - "pause"
+
+# Environment variables of the containers
+environment-variables:
+  identifier: TYPE
+  port: SERVER_PORT
+  motd: SERVER_MOTD
+  restricted: SERVER_RESTRICTED
+  name: SERVER_NAME

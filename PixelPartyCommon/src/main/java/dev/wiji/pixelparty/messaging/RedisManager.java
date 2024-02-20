@@ -9,12 +9,14 @@ import java.util.Locale;
 public class RedisManager {
 	public static PixelPartyPlugin plugin;
 
-	//TODO: Move to config
-	public static Jedis jedisSubscribe = new Jedis("redis://152.70.124.44:6379");
-	public static Jedis jedisPublish = new Jedis("redis://152.70.124.44:6379");
+	public static Jedis jedisSubscribe;
+	public static Jedis jedisPublish;
 
 	public static void init(PixelPartyPlugin instance) {
 		plugin = instance;
+
+		jedisSubscribe = new Jedis(plugin.getConfigOption("redis-url"));
+		jedisPublish = new Jedis(plugin.getConfigOption("redis-url"));
 
 		Thread thread = new Thread(() -> {
 			try {
