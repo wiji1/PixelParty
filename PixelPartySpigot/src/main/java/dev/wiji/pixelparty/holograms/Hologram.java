@@ -27,6 +27,8 @@ public abstract class Hologram {
 
 	private final BukkitTask task;
 
+	private boolean clickable = false;
+
 	public Hologram(Location spawnLocation) {
 		this(spawnLocation, ViewMode.ALL, RefreshMode.AUTOMATIC_MEDIUM);
 	}
@@ -154,6 +156,10 @@ public abstract class Hologram {
 		}
 	}
 
+	public List<TextLine> getTextLines() {
+		return textLines;
+	}
+
 	public void updateHologram(Player player) {
 		textLines.forEach(textLine -> textLine.updateLine(this, player));
 	}
@@ -182,5 +188,13 @@ public abstract class Hologram {
 	public void setPermittedViewers(List<Player> permittedViewers) {
 		this.permittedViewers.clear();
 		this.permittedViewers.addAll(permittedViewers);
+	}
+
+	public boolean isClickable() {
+		return clickable;
+	}
+
+	public void setClickable(boolean clickable) {
+		this.clickable = clickable;
 	}
 }

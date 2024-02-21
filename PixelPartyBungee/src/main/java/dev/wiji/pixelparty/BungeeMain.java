@@ -68,6 +68,8 @@ public class BungeeMain extends Plugin implements PixelPartyPlugin {
 		getProxy().getPluginManager().registerCommand(this, new LobbyCommand("lobby"));
 		getProxy().getPluginManager().registerListener(this, new MessageListener());
 		getProxy().getPluginManager().registerListener(this, new PlayerManager());
+
+		new LeaderboardReset();
 	}
 
 	@Override
@@ -130,5 +132,13 @@ public class BungeeMain extends Plugin implements PixelPartyPlugin {
 
 	public Configuration getConfiguration() {
 		return configuration;
+	}
+
+	public void saveConfig() {
+		try {
+			ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, new File(getDataFolder(), "config.yml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

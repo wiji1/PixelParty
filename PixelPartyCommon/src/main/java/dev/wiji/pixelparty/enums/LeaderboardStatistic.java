@@ -12,4 +12,17 @@ public enum LeaderboardStatistic {
 		this.sqlName = sqlName;
 		this.name = name;
 	}
+
+	public String toString() {
+		return sqlName;
+	}
+
+	public static LeaderboardStatistic fromString(String text) {
+		for(LeaderboardStatistic value : values()) {
+			if(value.sqlName.equalsIgnoreCase(text)) {
+				return value;
+			}
+		}
+		return null;
+	}
 }

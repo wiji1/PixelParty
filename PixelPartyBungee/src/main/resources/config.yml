@@ -6,6 +6,9 @@ sql-pass: ""
 
 redis-url: ""
 
+next-weekly-reset: -1
+next-monthly-reset: -1
+
 
 # Docker Inspector Config
 

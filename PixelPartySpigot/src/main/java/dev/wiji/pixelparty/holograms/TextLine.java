@@ -62,6 +62,10 @@ public class TextLine {
 		nmsPlayer.playerConnection.sendPacket(packet);
 	}
 
+	public int getEntityId() {
+		return entityId;
+	}
+
 	public EntityArmorStand getPacketStand(Location displayLocation, Player player, boolean invisible) {
 		World nmsWorld = ((CraftWorld) displayLocation.getWorld()).getHandle();
 
@@ -71,7 +75,7 @@ public class TextLine {
 		String text = ChatColor.translateAlternateColorCodes('&', uncolored);
 
 		EntityArmorStand stand = new EntityArmorStand(nmsWorld);
-		stand.n(true);
+		stand.n(!hologram.isClickable());
 		stand.setInvisible(true);
 		stand.setCustomNameVisible(!invisible);
 		stand.setArms(true);

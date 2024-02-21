@@ -1,9 +1,9 @@
 package dev.wiji.pixelparty.controllers;
 
 import dev.wiji.pixelparty.BungeeMain;
-import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.inspector.events.MessageEvent;
+import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.objects.GameServer;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -135,6 +135,8 @@ public class LobbyManager extends QueueManager implements Listener {
 		if(!activeServers.contains(server) && !waitingServers.contains(server)) return;
 
 		if(strings.get(0).equals("SERVER START")) {
+			LeaderboardReset.sendNextResetTime(server);
+
 			waitingServers.remove(server);
 			activeServers.add(server);
 			return;

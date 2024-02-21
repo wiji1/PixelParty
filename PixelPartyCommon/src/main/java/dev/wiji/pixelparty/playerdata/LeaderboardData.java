@@ -50,6 +50,11 @@ public class LeaderboardData {
 		}
 	}
 
+	public void clear() {
+		leaderboardPositions.clear();
+		saveData();
+	}
+
 	public void fetchData() {
 
 		SQLTable table = TableManager.getTable(leaderboardType);

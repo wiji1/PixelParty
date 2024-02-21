@@ -10,4 +10,19 @@ public enum LeaderboardType {
 	LeaderboardType(String name) {
 		this.displayName = name;
 	}
+
+	public String toString() {
+		return name();
+	}
+
+	public static LeaderboardType fromString(String text) {
+		for(LeaderboardType value : values()) {
+			if(value.name().equalsIgnoreCase(text)) {
+				return value;
+			}
+		}
+
+		return null;
+	}
+
 }

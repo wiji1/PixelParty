@@ -21,6 +21,8 @@ public class PixelPlayer {
 
 	public UUID uuid;
 	public Group userGroup = Group.DEFAULT;
+	public LeaderboardStatistic currentStatistic = LeaderboardStatistic.NORMAL_WINS;
+	public LeaderboardType currentType = LeaderboardType.LIFETIME;
 
 	public Integer volume = 50;
 	public Boolean pausedMusic = false;

@@ -269,6 +269,10 @@ public class SQLTable {
 		}
 	}
 
+	public void clear() {
+		executeUpdate("DELETE FROM " + tableName);
+	}
+
 	public DatabaseMetaData getMetaData() {
 		try {
 			return connection.getMetaData();

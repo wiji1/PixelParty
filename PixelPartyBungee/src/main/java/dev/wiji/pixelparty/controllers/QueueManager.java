@@ -86,6 +86,8 @@ public class QueueManager implements Listener {
 		if(strings.size() < 1) return;
 
 		if(strings.get(0).equals("SERVER START")) {
+			LeaderboardReset.sendNextResetTime(server);
+
 			System.out.println("Server started: " + server.serverType.name());
 			waitingServers.remove(server);
 			queueServers.add(server);
