@@ -31,8 +31,8 @@ public class LeaderboardManager implements Listener {
 
 	public static List<Leaderboard> leaderboards = new ArrayList<>();
 
-	public static final Location LOBBY_LEADERBOARD = new Location(Bukkit.getWorld("lobby"), 0, 66.5, 32);
-	public static final Location GAME_LEADERBOARD = new Location(Bukkit.getWorld("world"), -53, 2.5, 0);
+	public static final Location LOBBY_LEADERBOARD = new Location(Bukkit.getWorld("lobby"), 0, 66.5, 25);
+	public static final Location GAME_LEADERBOARD = new Location(Bukkit.getWorld("world"), -53, 2.5, 0.5);
 
 	public static long weeklyResetTime = -1;
 	public static long monthlyResetTime = -1;

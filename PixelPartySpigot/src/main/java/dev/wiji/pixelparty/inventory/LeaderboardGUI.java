@@ -93,7 +93,7 @@ public class LeaderboardGUI extends GUI {
 
 		@Override
 		public void onOpen(InventoryOpenEvent event) {
-
+			GameSound.CLICK.play(player);
 		}
 
 		@Override

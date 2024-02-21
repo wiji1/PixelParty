@@ -47,7 +47,7 @@ public class Leaderboard {
 				if(defaultStatistic != null && !overriddenPlayers.contains(player.getUniqueId())) statistic = defaultStatistic;
 				if(defaultType != null && !overriddenPlayers.contains(player.getUniqueId())) type = defaultType;
 
-				strings.add("&b&n" + statistic.name);
+				strings.add("&b&n&l" + statistic.name);
 				strings.add("&7&o" + type.displayName);
 				for(LeaderboardPosition leaderboardPosition : LeaderboardManager.getLeaderboardPositions(statistic, type)) {
 					if(leaderboardPosition == null) {
@@ -56,14 +56,14 @@ public class Leaderboard {
 					}
 
 					String nameText = Misc.getNameAndRank(leaderboardPosition.uuid);
-					strings.add("&7" + leaderboardPosition.position + ". " + nameText + " &7 - &e" + leaderboardPosition.value);
+					strings.add("&e" + leaderboardPosition.position + ". " + nameText + " &7 - &e" + leaderboardPosition.value);
 				}
 
 				int position = pixelPlayer.getLeaderboardPosition(type, statistic);
 				if(position > 10) {
 					int value = pixelPlayer.getLeaderboardStat(type, statistic);
 					String nameText = Misc.getNameAndRank(player);
-					strings.add("&7" + position + ". " + nameText + " &7 - &e" + value);
+					strings.add("&e" + position + ". " + nameText + " &7 - &e" + value);
 				}
 
 				strings.add(LeaderboardManager.getResetString(type));
