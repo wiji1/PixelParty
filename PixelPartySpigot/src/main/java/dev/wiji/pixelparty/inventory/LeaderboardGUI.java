@@ -150,6 +150,7 @@ public class LeaderboardGUI extends GUI {
 				PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
 				pixelPlayer.currentType = type;
 				pixelPlayer.currentStatistic = statistic;
+				pixelPlayer.save();
 				if(!leaderboard.overriddenPlayers.contains(player.getUniqueId()))
 					leaderboard.overriddenPlayers.add(player.getUniqueId());
 				leaderboard.hologram.updateHologram(player);

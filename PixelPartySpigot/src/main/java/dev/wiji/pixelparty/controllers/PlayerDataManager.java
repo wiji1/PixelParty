@@ -30,7 +30,8 @@ public class PlayerDataManager implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onLeave(PlayerQuitEvent event) {
 		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(event.getPlayer());
-		pixelPlayer.save();
+		//Doesn't update fast enough when switching servers
+//		pixelPlayer.save();
 		PixelPlayer.pixelPlayers.remove(pixelPlayer);
 	}
 
