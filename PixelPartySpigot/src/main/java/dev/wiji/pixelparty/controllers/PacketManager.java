@@ -7,6 +7,7 @@ import dev.wiji.pixelparty.objects.PacketPlayer;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
@@ -218,6 +219,47 @@ public class PacketManager implements Listener {
 		} catch(NoSuchFieldException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@EventHandler
+	public void onMultiBlockChange(PacketSendEvent event) {
+		if(!event.getPacketType().name().equals("MULTI_BLOCK_CHANGE")) return;
+		PacketPlayOutMultiBlockChange packet = (PacketPlayOutMultiBlockChange) event.getPacket();
+		FloorManager floorManager = PixelParty.gameManager.floorManager;
+
+		try {
+			Field coordinatesField = packet.getClass().getDeclaredField("a");
+			Field blockDataField = packet.getClass().getDeclaredField("b");
+			coordinatesField.setAccessible(true);
+			blockDataField.setAccessible(true);
+
+			ChunkCoordIntPair chunkCoord = (ChunkCoordIntPair) coordinatesField.get(packet);
+			PacketPlayOutMultiBlockChange.MultiBlockChangeInfo[] blockData = new PacketPlayOutMultiBlockChange.MultiBlockChangeInfo[16 * 16];
+			Chunk chunk = Bukkit.getWorld("world").getChunkAt(chunkCoord.x, chunkCoord.z);
+
+			int k = 0;
+			for(int i = -8; i < 8; i++) {
+				for(int j = -8; j < 8; j++) {
+					Block block = chunk.getBlock(i, 0, j);
+					if(!floorManager.isOnFloor(block.getLocation())) continue;
+					if(floorManager.shouldBeAir(block)) continue;
+
+					byte color = floorManager.getBlockColor(block);
+					net.minecraft.server.v1_8_R3.Block nmsBlock = net.minecraft.server.v1_8_R3.Block.getById(35);
+
+					short blockDataValue = (short) ((block.getX() & 15) << 12 | (block.getZ() & 15) << 8 | block.getY());
+					blockData[k] = packet.new MultiBlockChangeInfo((short) blockDataValue, nmsBlock.fromLegacyData(color));
+
+					k++;
+				}
+			}
+
+			blockDataField.set(packet, blockData);
+
+		} catch(NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	public byte[] modifyChunk(int bitmask, byte[] buffer, int chunkX, int chunkZ) {
