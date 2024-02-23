@@ -4,6 +4,7 @@ import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.events.PacketSendEvent;
 import dev.wiji.pixelparty.objects.PacketPlayer;
+import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -130,6 +131,8 @@ public class PacketManager implements Listener {
 	public void onChunkPacketSend(PacketSendEvent event) {
 		if(!event.getPacketType().name().equals("MAP_CHUNK")) return;
 		PacketPlayOutMapChunk packet = (PacketPlayOutMapChunk) event.getPacket();
+		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(event.getPlayer());
+		if(!pixelPlayer.woolFloor) return;
 
 		try {
 			Field chunkXField = packet.getClass().getDeclaredField("a");
@@ -157,6 +160,8 @@ public class PacketManager implements Listener {
 	public void onBulkChunkPacketSend(PacketSendEvent event) {
 		if(!event.getPacketType().name().equals("MAP_CHUNK_BULK")) return;
 		PacketPlayOutMapChunkBulk packet = (PacketPlayOutMapChunkBulk) event.getPacket();
+		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(event.getPlayer());
+		if(!pixelPlayer.woolFloor) return;
 
 		try {
 			Field xField = packet.getClass().getDeclaredField("a");
@@ -179,6 +184,8 @@ public class PacketManager implements Listener {
 				map.a = modifyChunk(map.b, map.a, chunkX[i], chunkZ[i]);
 			}
 
+
+
 		} catch(NoSuchFieldException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
@@ -188,6 +195,9 @@ public class PacketManager implements Listener {
 	public void onBlockUpdate(PacketSendEvent event) {
 		if(!event.getPacketType().name().equals("BLOCK_CHANGE")) return;
 		PacketPlayOutBlockChange packet = (PacketPlayOutBlockChange) event.getPacket();
+		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(event.getPlayer());
+		if(!pixelPlayer.woolFloor) return;
+
 		FloorManager floorManager = PixelParty.gameManager.floorManager;
 
 		try {
@@ -225,6 +235,9 @@ public class PacketManager implements Listener {
 	public void onMultiBlockChange(PacketSendEvent event) {
 		if(!event.getPacketType().name().equals("MULTI_BLOCK_CHANGE")) return;
 		PacketPlayOutMultiBlockChange packet = (PacketPlayOutMultiBlockChange) event.getPacket();
+		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(event.getPlayer());
+		if(!pixelPlayer.woolFloor) return;
+
 		FloorManager floorManager = PixelParty.gameManager.floorManager;
 
 		try {
@@ -284,6 +297,11 @@ public class PacketManager implements Listener {
 							int metadata = blockData & 15;
 
 							Block block = Bukkit.getWorld("world").getBlockAt(x + (chunkX * 16), y, z + (chunkZ * 16));
+							if(!floorManager.isOnFloor(block.getLocation())) {
+								++index;
+								continue;
+							}
+
 							boolean shouldBeAir = floorManager.shouldBeAir(block);
 
 							int newId = shouldBeAir ? 0 : 35;

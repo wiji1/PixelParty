@@ -27,6 +27,8 @@ public class PixelPlayer {
 	public Integer volume = 50;
 	public Boolean pausedMusic = false;
 
+	public Boolean woolFloor = false;
+
 	public transient LeaderboardData[] leaderboardData = new LeaderboardData[LeaderboardType.values().length];
 
 	public PixelPlayer(Player player) {

@@ -183,7 +183,10 @@ public class FloorManager {
 		int x = block.getX() + 32;
 		int z = block.getZ() + 32;
 
-		return currentFloorBlueprint[z * 64 + x];
+		int index = z * 64 + x;
+		if(index < 0 || index >= currentFloorBlueprint.length) return 0;
+
+		return currentFloorBlueprint[index];
 	}
 
 	public boolean shouldBeAir(Block block) {
@@ -270,5 +273,14 @@ public class FloorManager {
 			if(floor.name.equalsIgnoreCase(name)) return floor;
 		}
 		return null;
+	}
+
+	public void setStartFloor(Floor floor) {
+		this.startFloor = floor;
+		currentFloorBlueprint = floor.blueprint.clone();
+	}
+
+	public void setEndFloor(Floor floor) {
+		this.endFloor = floor;
 	}
 }

@@ -6,6 +6,7 @@ import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.enums.Skin;
 import dev.wiji.pixelparty.events.MessageEvent;
 import dev.wiji.pixelparty.inventory.ServerSelectorGUI;
+import dev.wiji.pixelparty.inventory.SettingsGUI;
 import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.objects.PacketPlayer;
 import dev.wiji.pixelparty.playerdata.PixelPlayer;
@@ -95,7 +96,8 @@ public class LobbyManager implements Listener {
 
 			@Override
 			public void onRightClick(Player player) {
-				player.sendMessage(Misc.color("&cThis feature is coming soon!"));
+				SettingsGUI gui = new SettingsGUI(player);
+				gui.open();
 			}
 		});
 

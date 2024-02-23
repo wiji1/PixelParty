@@ -112,8 +112,9 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 	public void registerFloors() {
 		FloorManager floorManager = gameManager.floorManager;
 
-		floorManager.startFloor = new Floor("Hypixel", "start", Floor.FloorType.STATIC);
-		floorManager.endFloor = new Floor("End", "end", Floor.FloorType.STATIC);
+
+		floorManager.setStartFloor(new Floor("Hypixel", "start", Floor.FloorType.STATIC));
+		floorManager.setEndFloor(new Floor("End", "end", Floor.FloorType.STATIC));
 
 		floorManager.registerFloor(new Floor("Blue Heart", "d2", Floor.FloorType.STATIC));
 		floorManager.registerFloor(new Floor("Bubbles", "d3", Floor.FloorType.DYNAMIC));
