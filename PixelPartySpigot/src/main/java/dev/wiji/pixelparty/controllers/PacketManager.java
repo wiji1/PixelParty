@@ -5,7 +5,9 @@ import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.events.PacketSendEvent;
 import dev.wiji.pixelparty.objects.PacketPlayer;
 import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -121,6 +123,142 @@ public class PacketManager implements Listener {
 		} catch(NoSuchFieldException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@EventHandler
+	public void onChunkPacketSend(PacketSendEvent event) {
+		if(!event.getPacketType().name().equals("MAP_CHUNK")) return;
+		PacketPlayOutMapChunk packet = (PacketPlayOutMapChunk) event.getPacket();
+
+		try {
+			Field chunkXField = packet.getClass().getDeclaredField("a");
+			Field chunkZField = packet.getClass().getDeclaredField("b");
+
+			chunkXField.setAccessible(true);
+			chunkZField.setAccessible(true);
+
+			int chunkX = chunkXField.getInt(packet);
+			int chunkZ = chunkZField.getInt(packet);
+
+			Field chunkDataField = packet.getClass().getDeclaredField("c");
+			chunkDataField.setAccessible(true);
+
+			PacketPlayOutMapChunk.ChunkMap chunkMap = (PacketPlayOutMapChunk.ChunkMap) chunkDataField.get(packet);
+
+			chunkMap.a = modifyChunk(chunkMap.b, chunkMap.a, chunkX, chunkZ);
+
+		} catch(NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@EventHandler
+	public void onBulkChunkPacketSend(PacketSendEvent event) {
+		if(!event.getPacketType().name().equals("MAP_CHUNK_BULK")) return;
+		PacketPlayOutMapChunkBulk packet = (PacketPlayOutMapChunkBulk) event.getPacket();
+
+		try {
+			Field xField = packet.getClass().getDeclaredField("a");
+			Field zField = packet.getClass().getDeclaredField("b");
+			Field flagsField = packet.getClass().getDeclaredField("d");
+			Field chunkDataField = packet.getClass().getDeclaredField("c");
+			xField.setAccessible(true);
+			zField.setAccessible(true);
+			flagsField.setAccessible(true);
+			chunkDataField.setAccessible(true);
+
+			int[] chunkX = (int[]) xField.get(packet);
+			int[] chunkZ = (int[]) zField.get(packet);
+			boolean fullChunk = flagsField.getBoolean(packet);
+			PacketPlayOutMapChunk.ChunkMap[] chunkMap = (PacketPlayOutMapChunk.ChunkMap[]) chunkDataField.get(packet);
+
+
+			for(int i = 0; i < chunkMap.length; i++) {
+				PacketPlayOutMapChunk.ChunkMap map = chunkMap[i];
+				map.a = modifyChunk(map.b, map.a, chunkX[i], chunkZ[i]);
+			}
+
+		} catch(NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@EventHandler
+	public void onBlockUpdate(PacketSendEvent event) {
+		if(!event.getPacketType().name().equals("BLOCK_CHANGE")) return;
+		PacketPlayOutBlockChange packet = (PacketPlayOutBlockChange) event.getPacket();
+		FloorManager floorManager = PixelParty.gameManager.floorManager;
+
+		try {
+			Field blockDataField = packet.getClass().getDeclaredField("block");
+			blockDataField.setAccessible(true);
+			Field blockPositionField = packet.getClass().getDeclaredField("a");
+			blockPositionField.setAccessible(true);
+
+			BlockPosition blockPosition = (BlockPosition) blockPositionField.get(packet);
+
+			Block block = Bukkit.getWorld("world").getBlockAt(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ());
+			if(!floorManager.isOnFloor(block.getLocation())) return;
+			if(floorManager.shouldBeAir(block)) return;
+			byte color = floorManager.getBlockColor(block);
+
+
+//			IBlockData blockData = (IBlockData) blockDataField.get(packet);
+
+			try {
+				net.minecraft.server.v1_8_R3.Block nmsBlock = net.minecraft.server.v1_8_R3.Block.getById(35);
+
+				blockDataField.set(packet, nmsBlock.fromLegacyData(color));
+			} catch(Exception e) {
+				throw new RuntimeException(e);
+			}
+
+
+
+		} catch(NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public byte[] modifyChunk(int bitmask, byte[] buffer, int chunkX, int chunkZ) {
+		FloorManager floorManager = PixelParty.gameManager.floorManager;
+
+		int index = 0;
+
+		for(int i = 0; i < 16; ++i) {
+			if((bitmask & 1 << i) == 0) continue;
+			for(int y = 0; y < 16; ++y) {
+
+				if(y != 0) {
+					++index;
+					continue;
+				}
+
+				for(int z = 0; z < 16; ++z) {
+					for(int x = 0; x < 16; ++x) {
+						if(index < buffer.length) {
+							int blockData = buffer[index << 1] & 255 | (buffer[(index << 1) + 1] & 255) << 8;
+							int blockId = blockData >> 4;
+							int metadata = blockData & 15;
+
+							Block block = Bukkit.getWorld("world").getBlockAt(x + (chunkX * 16), y, z + (chunkZ * 16));
+							boolean shouldBeAir = floorManager.shouldBeAir(block);
+
+							int newId = shouldBeAir ? 0 : 35;
+							int newMetadata = shouldBeAir ? 0 : floorManager.getBlockColor(block);
+
+							int newBlockData = (newId << 4) | (newMetadata & 15);
+							buffer[index << 1] = (byte) (newBlockData & 255);
+							buffer[(index << 1) + 1] = (byte) (newBlockData >> 8 & 255);
+						}
+						++index;
+					}
+				}
+			}
+
+		}
+
+		return buffer;
 	}
 
 	@EventHandler
