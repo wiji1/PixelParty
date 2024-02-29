@@ -23,6 +23,7 @@ public enum NBTTag {
 	INCREASE_SPEED("pp-increase-speed"),
 	PAUSE_GAME("pp-pause-game"),
 	TOGGLE_POWERUPS("pp-toggle-powerups"),
+	COLOR_BLOCK("pp-color-block")
 	;
 
 	private final String ref;

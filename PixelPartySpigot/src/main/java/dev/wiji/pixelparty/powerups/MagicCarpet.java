@@ -43,8 +43,7 @@ public class MagicCarpet extends PowerUp {
 
 				for(Location carpetBlock : carpetBlocks) {
 					byte color = manager.getBlockColor(carpetBlock.getBlock());
-					carpetBlock.getBlock().setType(Material.STAINED_CLAY);
-					carpetBlock.getBlock().setData(color);
+					carpetBlock.getBlock().setTypeIdAndData(159, color, true);
 				}
 			}
 		}.runTaskTimer(PixelParty.INSTANCE, 0, 2);

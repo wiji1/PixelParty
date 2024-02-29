@@ -184,7 +184,7 @@ public class FloorManager {
 		int z = block.getZ() + 32;
 
 		int index = z * 64 + x;
-		if(index < 0 || index >= currentFloorBlueprint.length) return 0;
+		if(index < 0 || index >= currentFloorBlueprint.length) return -1;
 
 		return currentFloorBlueprint[index];
 	}

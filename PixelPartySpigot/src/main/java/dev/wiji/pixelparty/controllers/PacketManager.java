@@ -3,18 +3,21 @@ package dev.wiji.pixelparty.controllers;
 import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.events.PacketSendEvent;
+import dev.wiji.pixelparty.misc.Pair;
 import dev.wiji.pixelparty.objects.PacketPlayer;
 import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -130,6 +133,7 @@ public class PacketManager implements Listener {
 	@EventHandler
 	public void onChunkPacketSend(PacketSendEvent event) {
 		if(!event.getPacketType().name().equals("MAP_CHUNK")) return;
+		if(PixelParty.serverType == ServerType.LOBBY) return;
 		PacketPlayOutMapChunk packet = (PacketPlayOutMapChunk) event.getPacket();
 		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(event.getPlayer());
 		if(!pixelPlayer.woolFloor) return;
@@ -159,6 +163,8 @@ public class PacketManager implements Listener {
 	@EventHandler
 	public void onBulkChunkPacketSend(PacketSendEvent event) {
 		if(!event.getPacketType().name().equals("MAP_CHUNK_BULK")) return;
+		if(PixelParty.serverType == ServerType.LOBBY) return;
+
 		PacketPlayOutMapChunkBulk packet = (PacketPlayOutMapChunkBulk) event.getPacket();
 		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(event.getPlayer());
 		if(!pixelPlayer.woolFloor) return;
@@ -175,7 +181,6 @@ public class PacketManager implements Listener {
 
 			int[] chunkX = (int[]) xField.get(packet);
 			int[] chunkZ = (int[]) zField.get(packet);
-			boolean fullChunk = flagsField.getBoolean(packet);
 			PacketPlayOutMapChunk.ChunkMap[] chunkMap = (PacketPlayOutMapChunk.ChunkMap[]) chunkDataField.get(packet);
 
 
@@ -209,15 +214,18 @@ public class PacketManager implements Listener {
 			BlockPosition blockPosition = (BlockPosition) blockPositionField.get(packet);
 
 			Block block = Bukkit.getWorld("world").getBlockAt(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ());
+			if(block.getType() == Material.AIR) return;
 			if(!floorManager.isOnFloor(block.getLocation())) return;
-			if(floorManager.shouldBeAir(block)) return;
-			byte color = floorManager.getBlockColor(block);
 
+			boolean isBlock = !floorManager.shouldBeAir(block);
+
+			int id = isBlock ? 35 : 0;
+			byte color = isBlock ? floorManager.getBlockColor(block) : 0;
 
 //			IBlockData blockData = (IBlockData) blockDataField.get(packet);
 
 			try {
-				net.minecraft.server.v1_8_R3.Block nmsBlock = net.minecraft.server.v1_8_R3.Block.getById(35);
+				net.minecraft.server.v1_8_R3.Block nmsBlock = net.minecraft.server.v1_8_R3.Block.getById(id);
 
 				blockDataField.set(packet, nmsBlock.fromLegacyData(color));
 			} catch(Exception e) {
@@ -247,32 +255,32 @@ public class PacketManager implements Listener {
 			blockDataField.setAccessible(true);
 
 			ChunkCoordIntPair chunkCoord = (ChunkCoordIntPair) coordinatesField.get(packet);
-			PacketPlayOutMultiBlockChange.MultiBlockChangeInfo[] blockData = new PacketPlayOutMultiBlockChange.MultiBlockChangeInfo[16 * 16];
 			Chunk chunk = Bukkit.getWorld("world").getChunkAt(chunkCoord.x, chunkCoord.z);
 
-			int k = 0;
-			for(int i = -8; i < 8; i++) {
-				for(int j = -8; j < 8; j++) {
-					Block block = chunk.getBlock(i, 0, j);
-					if(!floorManager.isOnFloor(block.getLocation())) continue;
-					if(floorManager.shouldBeAir(block)) continue;
+			PacketPlayOutMultiBlockChange.MultiBlockChangeInfo[] blockChanges = (PacketPlayOutMultiBlockChange.MultiBlockChangeInfo[]) blockDataField.get(packet);
 
-					byte color = floorManager.getBlockColor(block);
-					net.minecraft.server.v1_8_R3.Block nmsBlock = net.minecraft.server.v1_8_R3.Block.getById(35);
+			List<PacketPlayOutMultiBlockChange.MultiBlockChangeInfo> newBlockChange = new ArrayList<>();
 
-					short blockDataValue = (short) ((block.getX() & 15) << 12 | (block.getZ() & 15) << 8 | block.getY());
-					blockData[k] = packet.new MultiBlockChangeInfo((short) blockDataValue, nmsBlock.fromLegacyData(color));
+			for(PacketPlayOutMultiBlockChange.MultiBlockChangeInfo blockChange : blockChanges) {
+				BlockPosition blockPosition = blockChange.a();
+				Block block = chunk.getBlock(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ());
 
-					k++;
-				}
+				if(!floorManager.isOnFloor(block.getLocation())) continue;
+				boolean isAir = block.getType() == Material.AIR;
+
+				byte color = isAir ? 0 : floorManager.getBlockColor(block);
+				int material = isAir ? 0 : 35;
+				net.minecraft.server.v1_8_R3.Block nmsBlock = net.minecraft.server.v1_8_R3.Block.getById(material);
+
+				short blockDataValue = (short) ((block.getX() & 15) << 12 | (block.getZ() & 15) << 8 | block.getY());
+				newBlockChange.add(packet.new MultiBlockChangeInfo(blockDataValue, nmsBlock.fromLegacyData(color)));
 			}
 
-			blockDataField.set(packet, blockData);
+			blockDataField.set(packet, newBlockChange.toArray(new PacketPlayOutMultiBlockChange.MultiBlockChangeInfo[0]));
 
 		} catch(NoSuchFieldException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
-
 	}
 
 	public byte[] modifyChunk(int bitmask, byte[] buffer, int chunkX, int chunkZ) {
@@ -297,15 +305,21 @@ public class PacketManager implements Listener {
 							int metadata = blockData & 15;
 
 							Block block = Bukkit.getWorld("world").getBlockAt(x + (chunkX * 16), y, z + (chunkZ * 16));
-							if(!floorManager.isOnFloor(block.getLocation())) {
+							if(!floorManager.isOnFloor(block.getLocation()) || block.getX() == 32) {
 								++index;
 								continue;
 							}
 
 							boolean shouldBeAir = floorManager.shouldBeAir(block);
+							byte color = floorManager.getBlockColor(block);
+							if(color == -1) {
+								++index;
+								continue;
+
+							}
 
 							int newId = shouldBeAir ? 0 : 35;
-							int newMetadata = shouldBeAir ? 0 : floorManager.getBlockColor(block);
+							int newMetadata = shouldBeAir ? 0 : color;
 
 							int newBlockData = (newId << 4) | (newMetadata & 15);
 							buffer[index << 1] = (byte) (newBlockData & 255);
@@ -369,12 +383,40 @@ public class PacketManager implements Listener {
 				chunkArray[i] = chunkList.get(i);
 			}
 
+			PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(event.getPlayer());
+			for(Integer xCoord : xCoords) {
+				for(Integer zCoord : zCoords) {
+					Pair<Integer, Integer> pair = new Pair<>(xCoord, zCoord);
+					if(!pixelPlayer.loadedChunks.contains(pair)) {
+						pixelPlayer.loadedChunks.add(pair);
+
+						checkToSpawnNPCs(event.getPlayer(), xCoord, zCoord);
+					}
+				}
+			}
+
 			chunkField.set(event.getPacket(), chunkArray);
 
 		} catch(IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	public void checkToSpawnNPCs(Player player, int x, int z) {
+		for(PacketPlayer lobbyNPC : LobbyManager.lobbyNPCs) {
+			Chunk chunk = lobbyNPC.getLocation().getChunk();
+			if(chunk.getX() == x && chunk.getZ() == z) {
+
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						lobbyNPC.spawnForPlayer(player);
+						System.out.println("Spawned NPC for " + player.getName());
+					}
+				}.runTaskLater(PixelParty.INSTANCE, 5L);
+			}
+		}
 	}
 
 	@EventHandler

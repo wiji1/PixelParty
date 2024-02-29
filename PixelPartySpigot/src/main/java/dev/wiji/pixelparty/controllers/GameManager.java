@@ -1,14 +1,17 @@
 package dev.wiji.pixelparty.controllers;
 
+import de.tr7zw.nbtapi.NBTItem;
 import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.GameSound;
 import dev.wiji.pixelparty.enums.LeaderboardStatistic;
+import dev.wiji.pixelparty.enums.NBTTag;
 import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.objects.PowerUp;
 import dev.wiji.pixelparty.objects.PracticeProfile;
 import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import dev.wiji.pixelparty.util.Color;
+import dev.wiji.pixelparty.util.Misc;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -269,8 +272,15 @@ public class GameManager {
 		itemMeta.setDisplayName(ChatColor.BOLD + color.getName());
 		itemStack.setItemMeta(itemMeta);
 
+		NBTItem nbtItem = new NBTItem(itemStack, true);
+		nbtItem.setBoolean(NBTTag.COLOR_BLOCK.getRef(), true);
+
 		for(UUID alivePlayer : alivePlayers) {
 			Player player = Bukkit.getPlayer(alivePlayer);
+			PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
+
+			if(pixelPlayer.woolFloor) itemStack.setType(Material.WOOL);
+
 			if(PracticeManager.isInSettings(player)) continue;
 
 			player.getInventory().setItem(8, itemStack);
@@ -288,7 +298,14 @@ public class GameManager {
 	public void removePlayersItem() {
 		for(UUID alivePlayer : alivePlayers) {
 			Player player = Bukkit.getPlayer(alivePlayer);
-			player.getInventory().remove(Material.STAINED_CLAY);
+
+			for(ItemStack content : player.getInventory().getContents()) {
+				if(Misc.isAirOrNull(content)) continue;
+				NBTItem nbtItem = new NBTItem(content);
+
+				if(nbtItem.hasKey(NBTTag.COLOR_BLOCK.getRef())) player.getInventory().remove(content);
+			}
+
 		}
 	}
 

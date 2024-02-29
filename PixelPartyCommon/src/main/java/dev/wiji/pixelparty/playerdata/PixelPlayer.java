@@ -3,6 +3,7 @@ package dev.wiji.pixelparty.playerdata;
 import dev.wiji.pixelparty.enums.Group;
 import dev.wiji.pixelparty.enums.LeaderboardStatistic;
 import dev.wiji.pixelparty.enums.LeaderboardType;
+import dev.wiji.pixelparty.misc.Pair;
 import dev.wiji.pixelparty.sql.*;
 import org.bukkit.entity.Player;
 
@@ -30,6 +31,8 @@ public class PixelPlayer {
 	public Boolean woolFloor = false;
 
 	public transient LeaderboardData[] leaderboardData = new LeaderboardData[LeaderboardType.values().length];
+
+	public transient List<Pair<Integer, Integer>> loadedChunks = new ArrayList<>();
 
 	public PixelPlayer(Player player) {
 		this.uuid = player.getUniqueId();

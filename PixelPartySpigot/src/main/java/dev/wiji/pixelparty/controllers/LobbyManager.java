@@ -136,9 +136,9 @@ public class LobbyManager implements Listener {
 		player.teleport(SPAWN_LOCATION);
 		event.setJoinMessage(null);
 
-		Bukkit.getScheduler().runTaskLater(PixelParty.INSTANCE, () -> {
-			for(PacketPlayer lobbyNPC : lobbyNPCs) lobbyNPC.spawnForPlayer(player);
-		}, 5);
+//		Bukkit.getScheduler().runTaskLater(PixelParty.INSTANCE, () -> {
+//			for(PacketPlayer lobbyNPC : lobbyNPCs) lobbyNPC.spawnForPlayer(player);
+//		}, 5);
 
 		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
 		Group group = pixelPlayer.getGroup();

@@ -42,11 +42,30 @@ public class GameServer {
 	}
 
 	public List<ProxiedPlayer> getOnlinePlayers() {
-		return new ArrayList<>(ProxyServer.getInstance().getServerInfo(getName()).getPlayers());
+		return new ArrayList<>(getServerInfo().getPlayers());
 	}
 
 	public int getPlayerCount() {
-		return getOnlinePlayers().size();
+		try {
+			return getOnlinePlayers().size();
+		} catch (NullPointerException e) {
+			removeFromAll();
+			return 0;
+		}
+
+	}
+
+	public void removeFromAll() {
+		System.out.println("Failed to pull playercount from " + getName() + ". Removing from all queues");
+
+		QueueManager queueManager = QueueManager.getQueue(serverType);
+
+		terminate();
+
+		assert queueManager != null;
+		queueManager.waitingServers.remove(this);
+		queueManager.queueServers.remove(this);
+		queueManager.activeServers.remove(this);
 	}
 
 	public void queuePlayer(ProxiedPlayer player) {

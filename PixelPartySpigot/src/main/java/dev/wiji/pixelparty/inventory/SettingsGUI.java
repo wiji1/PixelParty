@@ -67,7 +67,7 @@ public class SettingsGUI extends GUI {
 			lore.add("");
 			lore.add(Misc.color("&7Status: " + (pixelPlayer.woolFloor ? "&aEnabled" : "&cDisabled")));
 			lore.add("");
-			lore.add(Misc.color("&eClick to toggle wool floors!"));
+			lore.add(Misc.color("&eClick to toggle!"));
 
 			woolMeta.setLore(lore);
 			wool.setItemMeta(woolMeta);
