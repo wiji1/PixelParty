@@ -1,5 +1,6 @@
 package dev.wiji.pixelparty.controllers;
 
+import de.tr7zw.nbtapi.NBTItem;
 import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.*;
 import dev.wiji.pixelparty.messaging.PluginMessage;
@@ -160,10 +161,13 @@ public class PlayerManager implements Listener {
 
 		if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
+		NBTItem heldItem = new NBTItem(event.getPlayer().getItemInHand());
+		if(!heldItem.hasKey(NBTTag.COLOR_BLOCK.getRef())) return;
+
 		ItemStack held = event.getPlayer().getItemInHand();
 		Block block = event.getClickedBlock();
 
-		if(held.getType() == block.getType() && held.getData().getData() == block.getData()) {
+		if(held.getData().getData() == block.getData()) {
 			GameSound.COLOR_PLACE.play(event.getPlayer());
 		}
 
