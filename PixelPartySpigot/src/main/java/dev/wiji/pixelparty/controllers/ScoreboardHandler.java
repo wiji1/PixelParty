@@ -4,6 +4,7 @@ import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.Group;
 import dev.wiji.pixelparty.objects.PixelScoreboard;
 import dev.wiji.pixelparty.playerdata.PixelPlayer;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import net.minecraft.server.v1_8_R3.Scoreboard;
 import net.minecraft.server.v1_8_R3.ScoreboardTeam;
@@ -135,7 +136,7 @@ public class ScoreboardHandler implements Listener {
 		for(int i = 0; i < game.alivePlayers.size(); i++) {
 			if(i == 11) break;
 
-			scoreboard.add(" " + Misc.getDisplayName(game.alivePlayers.get(i)));
+			scoreboard.add(" " + MetaDataUtil.getDisplayName(game.alivePlayers.get(i)));
 		}
 		scoreboard.add("  ");
 		scoreboard.add(getFooter());

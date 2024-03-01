@@ -5,6 +5,7 @@ import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.Skin;
 import dev.wiji.pixelparty.events.PacketReceiveEvent;
 import dev.wiji.pixelparty.holograms.Hologram;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.SkinUtil;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
@@ -83,7 +84,7 @@ public abstract class PacketPlayer implements Listener {
 		World world = ((CraftWorld) player.getWorld()).getHandle();
 
 		GameProfile gameProfile = new GameProfile(uuid, name);
-		SkinUtil.skinProfile(gameProfile, skin.getTexture(), skin.getSignature());
+		MetaDataUtil.skinProfile(gameProfile, skin.getTexture(), skin.getSignature());
 
 		CustomPlayer customPlayer = new CustomPlayer(MinecraftServer.getServer(), server, gameProfile, new PlayerInteractManager(world), id);
 

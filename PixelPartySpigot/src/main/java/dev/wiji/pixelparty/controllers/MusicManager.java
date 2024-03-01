@@ -4,6 +4,7 @@ import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.GameSound;
 import dev.wiji.pixelparty.enums.Skin;
 import dev.wiji.pixelparty.playerdata.PixelPlayer;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.SkinUtil;
 import net.raphimc.noteblocklib.NoteBlockLib;
 import net.raphimc.noteblocklib.model.Note;
@@ -185,7 +186,7 @@ public class MusicManager implements Listener {
 
 		for(int i = 0; i < headSkins.length ; i++) {
 			Skin skin = headSkins[i];
-			ItemStack head = SkinUtil.getPlayerSkull(skin);
+			ItemStack head = MetaDataUtil.getPlayerSkull(skin);
 
 			ItemMeta meta = head.getItemMeta();
 			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', names[i]));

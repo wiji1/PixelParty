@@ -30,6 +30,7 @@ public class TableManager {
 			new TableStructure(
 					new TableColumn(String.class, "uuid", false, true),
 					new TableColumn(String.class, "name", false, false),
+					new TableColumn(String.class, "user_group", false, false),
 					new TableColumn(String.class, "skin_texture", false, false, 1000),
 					new TableColumn(String.class, "skin_signature", false, false, 1000)
 			)

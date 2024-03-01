@@ -3,6 +3,7 @@ package dev.wiji.pixelparty.inventory;
 import dev.wiji.pixelparty.controllers.LobbyManager;
 import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.messaging.PluginMessage;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import dev.wiji.pixelparty.util.SkinUtil;
 import org.bukkit.ChatColor;
@@ -40,12 +41,12 @@ public class PracticeSelectorPanel extends InventoryPanel{
 				ChatColor color = canJoin ? ChatColor.GREEN : ChatColor.RED;
 				int players = pluginMessage.getIntegers().get(0);
 
-				ItemStack head = SkinUtil.getPlayerSkull(Objects.requireNonNull(SkinUtil.getCachedSkin(owner)));
+				ItemStack head = MetaDataUtil.getPlayerSkull(Objects.requireNonNull(MetaDataUtil.getCachedSkin(owner)));
 				SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
 				skullMeta.setDisplayName(color + serverName);
 
 				List<String> lore = new ArrayList<>();
-				lore.add(Misc.color("&7Owner: ") + Misc.getDisplayName(owner));
+				lore.add(Misc.color("&7Owner: ") + MetaDataUtil.getDisplayName(owner));
 				lore.add("");
 				lore.add(Misc.color("&7Players: &e" + players));
 				lore.add("");

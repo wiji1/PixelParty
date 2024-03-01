@@ -6,6 +6,7 @@ import dev.wiji.pixelparty.enums.GameSound;
 import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.events.MessageEvent;
 import dev.wiji.pixelparty.objects.PracticeProfile;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -87,7 +88,7 @@ public class QueueManager implements Listener {
 
 
 		queuedPlayers.add(event.getPlayer().getUniqueId());
-		Misc.broadcast(Misc.getDisplayName(event.getPlayer()) + "&e has joined (&b" +
+		Misc.broadcast(MetaDataUtil.getDisplayName(event.getPlayer()) + "&e has joined (&b" +
 				queuedPlayers.size() + "&e/&b" + MAX_PLAYERS + "&e)");
 
 		if(PixelParty.gameManager.gameState != GameManager.GameState.LOBBY) {
@@ -113,7 +114,7 @@ public class QueueManager implements Listener {
 		if(PixelParty.gameManager.gameState != GameManager.GameState.LOBBY && PixelParty.serverType != ServerType.PRACTICE) return;
 
 		queuedPlayers.remove(event.getPlayer().getUniqueId());
-		Misc.broadcast(Misc.getDisplayName(event.getPlayer()) + "&e has quit!");
+		Misc.broadcast(MetaDataUtil.getDisplayName(event.getPlayer()) + "&e has quit!");
 
 		if(PixelParty.serverType == ServerType.PRACTICE) {
 			PixelParty.gameManager.alivePlayers.remove(event.getPlayer().getUniqueId());

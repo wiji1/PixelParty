@@ -1,5 +1,6 @@
 package dev.wiji.pixelparty.controllers;
 
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,7 +17,7 @@ public class ChatManager implements Listener {
         String originalMessage = event.getMessage();
 
         Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',
-                Misc.getNameAndRank(event.getPlayer().getUniqueId()) + "&f: " + originalMessage));
+                MetaDataUtil.getNameAndRank(event.getPlayer().getUniqueId()) + "&f: " + originalMessage));
     }
 
 }

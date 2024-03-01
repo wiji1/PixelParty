@@ -2,6 +2,7 @@ package dev.wiji.pixelparty.inventory;
 
 import com.mojang.authlib.GameProfile;
 import dev.wiji.pixelparty.PixelParty;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import org.bukkit.Bukkit;
@@ -96,7 +97,7 @@ public class TeleporterGUI extends GUI {
 
 				ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
 				SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-				headMeta.setDisplayName(Misc.getNameAndRank(alivePlayer));
+				headMeta.setDisplayName(MetaDataUtil.getNameAndRank(alivePlayer));
 
 				List<String> lore = new ArrayList<>(Collections.singletonList(Misc.color("&7Left-click to spectate!")));
 				headMeta.setLore(lore);

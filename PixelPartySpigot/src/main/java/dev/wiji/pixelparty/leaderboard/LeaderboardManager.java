@@ -37,8 +37,21 @@ public class LeaderboardManager implements Listener {
 	public static long weeklyResetTime = -1;
 	public static long monthlyResetTime = -1;
 
+	public static List<LeaderboardStorage> leaderboardStorages = new ArrayList<>();
+
 
 	public LeaderboardManager() {
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				leaderboardStorages.clear();
+				for(LeaderboardStatistic stat : LeaderboardStatistic.values()) {
+					leaderboardStorages.add(new LeaderboardStorage(stat));
+				}
+			}
+		}.runTaskTimerAsynchronously(PixelParty.INSTANCE, 0, 20 * 30);
+
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -75,6 +88,7 @@ public class LeaderboardManager implements Listener {
 	public static void registerLeaderboard(Leaderboard leaderboard) {
 		leaderboards.add(leaderboard);
 	}
+
 	public static void updateLeaderboards() {
 		for(Leaderboard leaderboard : leaderboards) {
 			leaderboard.hologram.updateHologram();
@@ -154,6 +168,16 @@ public class LeaderboardManager implements Listener {
 	}
 
 	public static LeaderboardPosition[] getLeaderboardPositions(LeaderboardStatistic stat, LeaderboardType type) {
+		for(LeaderboardStorage storage : leaderboardStorages) {
+			if(storage.stat == stat) {
+				return storage.positions[type.ordinal()];
+			}
+		}
+
+		throw new RuntimeException("LeaderboardStatistic not found!");
+	}
+
+	private static LeaderboardPosition[] getInternalPositions(LeaderboardStatistic stat, LeaderboardType type) {
 		SQLTable table = TableManager.getTable(type);
 
 		if(table == null) throw new RuntimeException("SQL Table failed to register!");
@@ -176,5 +200,18 @@ public class LeaderboardManager implements Listener {
 		}
 
 		return positions;
+	}
+
+	public static class LeaderboardStorage {
+		public LeaderboardStatistic stat;
+		public LeaderboardPosition[][] positions = new LeaderboardPosition[LeaderboardType.values().length][10];
+
+		public LeaderboardStorage(LeaderboardStatistic stat) {
+			this.stat = stat;
+
+			for(LeaderboardType type : LeaderboardType.values()) {
+				positions[type.ordinal()] = getInternalPositions(stat, type);
+			}
+		}
 	}
 }

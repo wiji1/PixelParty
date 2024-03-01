@@ -4,6 +4,7 @@ import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.GameSound;
 import dev.wiji.pixelparty.enums.Skin;
 import dev.wiji.pixelparty.objects.PracticeProfile;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import dev.wiji.pixelparty.util.SkinUtil;
 import org.bukkit.Bukkit;
@@ -46,13 +47,13 @@ public class PrivacyGUI extends GUI{
 			players.remove(player);
 
 			for(Player player : players) {
-				ItemStack head = SkinUtil.getPlayerSkull(SkinUtil.getCachedSkin(player.getUniqueId()));
+				ItemStack head = MetaDataUtil.getPlayerSkull(MetaDataUtil.getCachedSkin(player.getUniqueId()));
 
 				boolean manager = profile.getManagerList().contains(player.getUniqueId());
 				ChatColor color = manager ? ChatColor.GREEN : ChatColor.GRAY;
 
 				ItemMeta meta = head.getItemMeta();
-				meta.setDisplayName(Misc.getNameAndRank(player));
+				meta.setDisplayName(MetaDataUtil.getNameAndRank(player));
 				List<String> lore = new ArrayList<>();
 				lore.add("");
 				lore.add(Misc.color("&7Role: " + color + (manager ? "Manager" : "Visitor")));
@@ -71,7 +72,7 @@ public class PrivacyGUI extends GUI{
 
 			}
 
-			ItemStack visibility = SkinUtil.getPlayerSkull(Skin.PRIVACY);
+			ItemStack visibility = MetaDataUtil.getPlayerSkull(Skin.PRIVACY);
 			ItemMeta meta = visibility.getItemMeta();
 			meta.setDisplayName(Misc.color("&eServer Visibility"));
 			List<String> lore = new ArrayList<>();

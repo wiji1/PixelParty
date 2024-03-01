@@ -48,68 +48,6 @@ public class Misc {
 		}
 	}
 
-	public static String getDisplayName(Player player) {
-		return getDisplayName(player.getUniqueId());
-	}
-
-	public static String getDisplayName(UUID uuid) {
-
-		Group group = Group.DEFAULT;
-		String name = "NULL";
-
-		Player player = getPlayer(uuid);
-		if(player != null) {
-			PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
-			group = pixelPlayer.getGroup();
-			name = player.getDisplayName();
-		} else {
-			ResultSet rs = getCachedPlayerData(uuid);
-
-			try {
-				if(rs.next()) {
-					name = rs.getString("name");
-				}
-
-				rs.close();
-			} catch (Exception e) { e.printStackTrace(); }
-
-		}
-
-		return ChatColor.translateAlternateColorCodes('&',
-				group.getChatColor() + name);
-	}
-
-	public static String getNameAndRank(Player player) {
-		return getNameAndRank(player.getUniqueId());
-	}
-
-	public static String getNameAndRank(UUID uuid) {
-		String name = getDisplayName(uuid);
-
-		Group group;
-		Player player = getPlayer(uuid);
-		if(player != null) {
-			PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
-			group = pixelPlayer.getGroup();
-		} else {
-			group = Group.getGroup(uuid);
-		}
-
-		String groupPrefix = group.getChatColor().toString();
-		String rankName = group == Group.DEFAULT ? "" : "[" + group.getDisplayName() + "] " ;
-
-		return ChatColor.translateAlternateColorCodes('&',
-				groupPrefix + rankName + name);
-	}
-
-	public static ResultSet getCachedPlayerData(UUID uuid) {
-		SQLTable table = TableManager.getTable("PlayerCache");
-		if(table == null) throw new RuntimeException("SQL Table failed to register!");
-
-		return table.selectRow(new Constraint("uuid", uuid.toString()));
-
-	}
-
 	public static Player getPlayer(UUID uuid){
 		for(Player player : Bukkit.getOnlinePlayers()){
 			if(player.getUniqueId().equals(uuid)){

@@ -42,6 +42,7 @@ public class PlayerDataManager implements Listener {
 		EntityPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
 		GameProfile profile = nmsPlayer.getProfile();
 		Collection<Property> textures = profile.getProperties().get("textures");
+		PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
 
 		String texture = null;
 		String signature = null;
@@ -54,6 +55,7 @@ public class PlayerDataManager implements Listener {
 
 		table.updateRow(new Constraint("uuid", player.getUniqueId().toString()),
 				new Value("name", player.getName()),
+				new Value("user_group", pixelPlayer.userGroup.toString()),
 				new Value("skin_texture", texture),
 				new Value("skin_signature", signature)
 		);

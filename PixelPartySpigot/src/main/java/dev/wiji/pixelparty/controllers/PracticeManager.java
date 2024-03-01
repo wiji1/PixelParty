@@ -10,6 +10,7 @@ import dev.wiji.pixelparty.events.PacketReceiveEvent;
 import dev.wiji.pixelparty.inventory.FloorSelectGUI;
 import dev.wiji.pixelparty.inventory.PrivacyGUI;
 import dev.wiji.pixelparty.objects.PracticeProfile;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import dev.wiji.pixelparty.util.SkinUtil;
 import net.minecraft.server.v1_8_R3.*;
@@ -268,35 +269,35 @@ public class PracticeManager implements Listener {
 		NBTItem floorNBT = new NBTItem(floor, true);
 		floorNBT.setBoolean(NBTTag.FLOOR_SELECT.getRef(), true);
 
-		ItemStack color = SkinUtil.getPlayerSkull(Skin.COLOR_SELECT);
+		ItemStack color = MetaDataUtil.getPlayerSkull(Skin.COLOR_SELECT);
 		ItemMeta colorMeta = color.getItemMeta();
 		colorMeta.setDisplayName(ChatColor.RED + "Color Selection (Place)");
 		color.setItemMeta(colorMeta);
 		NBTItem colorNBT = new NBTItem(color, true);
 		colorNBT.setBoolean(NBTTag.COLOR_SELECT.getRef(), true);
 
-		ItemStack spawn = SkinUtil.getPlayerSkull(Skin.SPAWN_SELECT);
+		ItemStack spawn = MetaDataUtil.getPlayerSkull(Skin.SPAWN_SELECT);
 		ItemMeta spawnMeta = spawn.getItemMeta();
 		spawnMeta.setDisplayName(ChatColor.GREEN + "Spawn Selection (Place)");
 		spawn.setItemMeta(spawnMeta);
 		NBTItem spawnNBT = new NBTItem(spawn, true);
 		spawnNBT.setBoolean(NBTTag.SPAWN_SELECT.getRef(), true);
 
-		ItemStack speedDecrease = SkinUtil.getPlayerSkull(Skin.MINUS);
+		ItemStack speedDecrease = MetaDataUtil.getPlayerSkull(Skin.MINUS);
 		ItemMeta speedDecreaseMeta = speedDecrease.getItemMeta();
 		speedDecreaseMeta.setDisplayName(ChatColor.YELLOW + "Decrease Speed");
 		speedDecrease.setItemMeta(speedDecreaseMeta);
 		NBTItem speedDecreaseNBT = new NBTItem(speedDecrease, true);
 		speedDecreaseNBT.setBoolean(NBTTag.DECREASE_SPEED.getRef(), true);
 
-		ItemStack speedIncrease = SkinUtil.getPlayerSkull(Skin.PLUS);
+		ItemStack speedIncrease = MetaDataUtil.getPlayerSkull(Skin.PLUS);
 		ItemMeta speedIncreaseMeta = speedIncrease.getItemMeta();
 		speedIncreaseMeta.setDisplayName(ChatColor.YELLOW + "Increase Speed");
 		speedIncrease.setItemMeta(speedIncreaseMeta);
 		NBTItem speedIncreaseNBT = new NBTItem(speedIncrease, true);
 		speedIncreaseNBT.setBoolean(NBTTag.INCREASE_SPEED.getRef(), true);
 
-		ItemStack pause = SkinUtil.getPlayerSkull(Skin.PAUSE);
+		ItemStack pause = MetaDataUtil.getPlayerSkull(Skin.PAUSE);
 		ItemMeta pauseMeta = pause.getItemMeta();
 		pauseMeta.setDisplayName(ChatColor.YELLOW + "Pause Game");
 		pause.setItemMeta(pauseMeta);
@@ -322,7 +323,7 @@ public class PracticeManager implements Listener {
 	}
 
 	public static void givePrivacyItemStack(Player player) {
-		ItemStack privacy = SkinUtil.getPlayerSkull(Skin.PRIVACY);
+		ItemStack privacy = MetaDataUtil.getPlayerSkull(Skin.PRIVACY);
 		ItemMeta privacyMeta = privacy.getItemMeta();
 		privacyMeta.setDisplayName(ChatColor.AQUA + "Privacy Settings");
 		privacy.setItemMeta(privacyMeta);
@@ -380,7 +381,7 @@ public class PracticeManager implements Listener {
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
 
 		PacketPlayOutEntityEquipment equipment = new PacketPlayOutEntityEquipment(entity.getId(),
-				4, CraftItemStack.asNMSCopy(SkinUtil.getPlayerSkull(skin)));
+				4, CraftItemStack.asNMSCopy(MetaDataUtil.getPlayerSkull(skin)));
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(equipment);
 	}
 

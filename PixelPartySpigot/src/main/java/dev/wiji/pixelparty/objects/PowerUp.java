@@ -1,6 +1,7 @@
 package dev.wiji.pixelparty.objects;
 
 import dev.wiji.pixelparty.PixelParty;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -56,7 +57,7 @@ public abstract class PowerUp implements Listener {
 			PowerUp powerUp = powerUps.get(new Random().nextInt(powerUps.size()));
 			powerUp.onActivate(player, location);
 
-			String playerName = Misc.getNameAndRank(player);
+			String playerName = MetaDataUtil.getNameAndRank(player);
 			Misc.broadcast("&3\u2726 " + playerName + " &bcollected the &d&lPOWER-UP&b!");
 			remove();
 		}

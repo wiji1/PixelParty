@@ -7,6 +7,7 @@ import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.objects.PowerUp;
 import dev.wiji.pixelparty.objects.PracticeProfile;
 import dev.wiji.pixelparty.playerdata.PixelPlayer;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
@@ -206,7 +207,7 @@ public class PlayerManager implements Listener {
 		ScoreboardHandler.setToDeadTeam(player);
 		SpectatorManager.setSpectator(player);
 
-		Misc.broadcast("&4\u2716 " + Misc.getDisplayName(player) + " &7" + cause.getMessage() + "!");
+		Misc.broadcast("&4\u2716 " + MetaDataUtil.getDisplayName(player) + " &7" + cause.getMessage() + "!");
 	}
 
 	public static void updatePlayers() {

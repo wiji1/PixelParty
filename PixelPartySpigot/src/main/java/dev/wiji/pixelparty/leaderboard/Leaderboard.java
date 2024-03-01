@@ -7,6 +7,7 @@ import dev.wiji.pixelparty.holograms.RefreshMode;
 import dev.wiji.pixelparty.holograms.ViewMode;
 import dev.wiji.pixelparty.playerdata.LeaderboardPosition;
 import dev.wiji.pixelparty.playerdata.PixelPlayer;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -55,14 +56,14 @@ public class Leaderboard {
 						continue;
 					}
 
-					String nameText = Misc.getNameAndRank(leaderboardPosition.uuid);
+					String nameText = MetaDataUtil.getNameAndRank(leaderboardPosition.uuid);
 					strings.add("&e" + leaderboardPosition.position + ". " + nameText + " &7 - &e" + leaderboardPosition.value);
 				}
 
 				int position = pixelPlayer.getLeaderboardPosition(type, statistic);
 				if(position > 10) {
 					int value = pixelPlayer.getLeaderboardStat(type, statistic);
-					String nameText = Misc.getNameAndRank(player);
+					String nameText = MetaDataUtil.getNameAndRank(player);
 					strings.add("&e" + position + ". " + nameText + " &7 - &e" + value);
 				}
 
