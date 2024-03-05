@@ -45,7 +45,6 @@ public class MetaDataUtil {
 				if(rs.next()) {
 					name = rs.getString("name");
 					group = Group.fromString(rs.getString("user_group"));
-					//TODO: Make caching cache group
 				}
 
 				rs.close();
