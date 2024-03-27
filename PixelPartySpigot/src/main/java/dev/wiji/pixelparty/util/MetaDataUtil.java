@@ -9,6 +9,7 @@ import dev.wiji.pixelparty.sql.Constraint;
 import dev.wiji.pixelparty.sql.Field;
 import dev.wiji.pixelparty.sql.SQLTable;
 import dev.wiji.pixelparty.sql.TableManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,7 +38,7 @@ public class MetaDataUtil {
 			MetaData data = metaData.get(uuid);
 
 			group = data.getGroup();
-			name = data.getName();
+			name = ChatColor.stripColor(data.getName());
 		} else {
 			ResultSet rs = getCachedPlayerData(uuid);
 
@@ -48,8 +49,7 @@ public class MetaDataUtil {
 				}
 
 				rs.close();
-			} catch (Exception e) { e.printStackTrace(); }
-
+			} catch(Exception e) { e.printStackTrace(); }
 		}
 
 		metaData.put(uuid, new MetaData(name, group, getCachedSkin(uuid)));

@@ -68,6 +68,8 @@ public class LeaderboardData {
 			boolean exists = rs.next();
 
 			for(int i = 0; i < LeaderboardStatistic.values().length; i++) {
+				if(leaderboardType != LeaderboardType.LIFETIME && LeaderboardStatistic.values()[i].lifetimeOnly) continue;
+
 				String name = LeaderboardStatistic.values()[i].sqlName;
 
 				statistics[i] = exists ? rs.getInt(name) : 0;
@@ -91,6 +93,7 @@ public class LeaderboardData {
 		queryStorage.add(new Constraint("uuid", pixelPlayer.uuid.toString()));
 
 		for(LeaderboardPosition leaderboardPosition : leaderboardPositions) {
+			if(leaderboardPosition.statistic.lifetimeOnly && leaderboardType != LeaderboardType.LIFETIME) continue;
 			queryStorage.add(new Value(leaderboardPosition.statistic.sqlName, leaderboardPosition.value));
 		}
 

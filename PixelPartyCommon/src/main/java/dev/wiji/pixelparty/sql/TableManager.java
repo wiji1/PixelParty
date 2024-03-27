@@ -1,6 +1,7 @@
 package dev.wiji.pixelparty.sql;
 
 import dev.wiji.pixelparty.PixelPartyPlugin;
+import dev.wiji.pixelparty.enums.LeaderboardStatistic;
 import dev.wiji.pixelparty.enums.LeaderboardType;
 import dev.wiji.pixelparty.playerdata.PixelPlayer;
 
@@ -16,16 +17,6 @@ public class TableManager {
 	public static void registerTables(PixelPartyPlugin instance) {
 		plugin = instance;
 
-		for(LeaderboardType value : LeaderboardType.values()) {
-			new SQLTable(ConnectionInfo.PIXEL_PARTY, "LeaderboardData" + value.displayName,
-					new TableStructure(
-							new TableColumn(String.class, "uuid", false, true),
-							new TableColumn(Integer.class, "normal_wins", false, false),
-							new TableColumn(Integer.class, "hyper_wins", false, false)
-					)
-			);
-		}
-
 		new SQLTable(ConnectionInfo.PIXEL_PARTY, "PlayerCache",
 			new TableStructure(
 					new TableColumn(String.class, "uuid", false, true),
@@ -36,6 +27,20 @@ public class TableManager {
 			)
 
 		);
+
+		for(LeaderboardType value : LeaderboardType.values()) {
+			List<TableColumn> colums = new ArrayList<>();
+			colums.add(new TableColumn(String.class, "uuid", false, true));
+
+			for(LeaderboardStatistic stat : LeaderboardStatistic.values()) {
+				if(value != LeaderboardType.LIFETIME && stat.lifetimeOnly) continue;
+				colums.add(new TableColumn(Integer.class, stat.sqlName, false, false));
+			}
+
+			new SQLTable(ConnectionInfo.PIXEL_PARTY, "LeaderboardData" + value.displayName,
+					new TableStructure(colums.toArray(new TableColumn[0]))
+			);
+		}
 
 
 		List<TableColumn> pixelPlayerFields = new ArrayList<>();

@@ -182,6 +182,8 @@ public class LeaderboardManager implements Listener {
 
 		if(table == null) throw new RuntimeException("SQL Table failed to register!");
 
+		if(type != LeaderboardType.LIFETIME && stat.lifetimeOnly) return new LeaderboardPosition[10];
+
 		ResultSet rs = table.getTop(10, new Field(stat.sqlName));
 		LeaderboardPosition[] positions = new LeaderboardPosition[10];
 

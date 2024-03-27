@@ -64,7 +64,7 @@ public class Leaderboard {
 				if(position > 10) {
 					int value = pixelPlayer.getLeaderboardStat(type, statistic);
 					String nameText = MetaDataUtil.getNameAndRank(player);
-					strings.add("&e" + position + ". " + nameText + " &7 - &e" + value);
+					strings.add("&e" + position + ". " + nameText + " &7- &e" + value);
 				}
 
 				strings.add(LeaderboardManager.getResetString(type));

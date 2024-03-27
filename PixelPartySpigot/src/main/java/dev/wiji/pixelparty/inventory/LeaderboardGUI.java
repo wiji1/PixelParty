@@ -6,6 +6,7 @@ import dev.wiji.pixelparty.enums.LeaderboardType;
 import dev.wiji.pixelparty.leaderboard.Leaderboard;
 import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import dev.wiji.pixelparty.util.Misc;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -78,8 +79,15 @@ public class LeaderboardGUI extends GUI {
 					statistic = LeaderboardStatistic.values()[(statistic.ordinal() - 1 +
 							LeaderboardStatistic.values().length) % LeaderboardStatistic.values().length];
 				}
+				if(statistic.lifetimeOnly) type = LeaderboardType.LIFETIME;
+
 				placeItems();
 			} else if(slot == 15) {
+				if(statistic.lifetimeOnly) {
+					GameSound.ERROR.play(player);
+					return;
+				}
+
 				GameSound.CLICK.play(player);
 				if(event.getClick() == ClickType.LEFT) {
 					type = LeaderboardType.values()[(type.ordinal() + 1) % LeaderboardType.values().length];
@@ -128,8 +136,10 @@ public class LeaderboardGUI extends GUI {
 			List<String> typeLore = new ArrayList<>();
 			typeLore.add("");
 			for(LeaderboardType type : LeaderboardType.values()) {
+				ChatColor color = statistic.lifetimeOnly && type != LeaderboardType.LIFETIME ? ChatColor.RED : ChatColor.GRAY;
+
 				String sb = (type == this.type ? "&a\u279F" : " ") +
-						" &7" + type.displayName;
+						" " + color + type.displayName;
 				typeLore.add(Misc.color(sb));
 			}
 			typeLore.add("");
