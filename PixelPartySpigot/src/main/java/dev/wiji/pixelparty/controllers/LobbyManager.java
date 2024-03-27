@@ -5,6 +5,7 @@ import dev.wiji.pixelparty.enums.Group;
 import dev.wiji.pixelparty.enums.ServerType;
 import dev.wiji.pixelparty.enums.Skin;
 import dev.wiji.pixelparty.events.MessageEvent;
+import dev.wiji.pixelparty.inventory.RankedGUI;
 import dev.wiji.pixelparty.inventory.ServerSelectorGUI;
 import dev.wiji.pixelparty.inventory.SettingsGUI;
 import dev.wiji.pixelparty.messaging.PluginMessage;
@@ -85,6 +86,19 @@ public class LobbyManager implements Listener {
 					ServerSelectorGUI gui = new ServerSelectorGUI(player, response);
 					gui.open();
 				});
+			}
+		});
+
+		lobbyNPCs.add(new PacketPlayer(Misc.color("&c&lRANKED"), Skin.PRACTICE) {
+			@Override
+			public Location getLocation() {
+				return new Location(Bukkit.getWorld("lobby"), -7.5, 69, 8.5, -135, 0);
+			}
+
+			@Override
+			public void onRightClick(Player player) {
+				RankedGUI gui = new RankedGUI(player);
+				gui.open();
 			}
 		});
 

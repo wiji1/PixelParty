@@ -4,7 +4,9 @@ public enum ServerType {
 	PRACTICE(1, 5, "world"),
 	NORMAL(16, 5, "world"),
 	HYPER(16, 5, "world"),
-	LOBBY(25, 3, "lobby");
+	LOBBY(25, 3, "lobby"),
+	RANKED(16, -1, "world");
+
 
 	public final int defaultMaxPlayers;
 	public final int maxServers;

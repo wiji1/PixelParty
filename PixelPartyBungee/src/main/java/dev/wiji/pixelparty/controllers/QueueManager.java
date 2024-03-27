@@ -28,7 +28,7 @@ public class QueueManager implements Listener {
 	public QueueManager(ServerType serverType) {
 		this.serverType = serverType;
 
-		callForServer();
+		if(serverType != ServerType.RANKED) callForServer();
 		queueManagers.add(this);
 	}
 
@@ -79,7 +79,7 @@ public class QueueManager implements Listener {
 		List<String> strings = message.getStrings();
 
 		GameServer server = ServerManager.getServer(message.originServer);
-		if(server == null || server.serverType != serverType) return;
+		if(server == null) return;
 
 		if(!queueServers.contains(server) && !activeServers.contains(server) && !waitingServers.contains(server)) return;
 

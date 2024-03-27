@@ -59,8 +59,8 @@ public class BungeeMain extends Plugin implements PixelPartyPlugin {
 
 		lobbyManager = new LobbyManager();
 		getProxy().getPluginManager().registerListener(this, lobbyManager);
-
 		getProxy().getPluginManager().registerListener(this, new PracticeQueueManager());
+		getProxy().getPluginManager().registerListener(this, new RankedQueueManager());
 
 		getProxy().getPluginManager().registerListener(this, new QueueManager(ServerType.NORMAL));
 
