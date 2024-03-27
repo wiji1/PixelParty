@@ -57,7 +57,7 @@ public class Leaderboard {
 					}
 
 					String nameText = MetaDataUtil.getNameAndRank(leaderboardPosition.uuid);
-					strings.add("&e" + leaderboardPosition.position + ". " + nameText + " &7 - &e" + leaderboardPosition.value);
+					strings.add("&e" + leaderboardPosition.position + ". " + nameText + " &7- &e" + leaderboardPosition.value);
 				}
 
 				int position = pixelPlayer.getLeaderboardPosition(type, statistic);
