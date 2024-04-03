@@ -13,14 +13,12 @@ import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class RankedQueueManager extends QueueManager implements Listener {
 
 	public Map<UUID, ServerType> queuePreference = new HashMap<>();
+	public List<UUID> lockedPlayers = new ArrayList<>();
 
 	public RankedQueueManager() {
 		super(ServerType.RANKED);
@@ -31,6 +29,11 @@ public class RankedQueueManager extends QueueManager implements Listener {
 		if(!queuePreference.containsKey(player.getUniqueId())) {
 			player.sendMessage(TextComponent.fromLegacyText(ChatColor.RED +
 					"An error has occurred while queuing, please try again later"));
+			return;
+		}
+
+		if(lockedPlayers.contains(player.getUniqueId())) {
+			player.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "You must wait for your previous ranked game to end before re-queuing!"));
 			return;
 		}
 
@@ -46,12 +49,10 @@ public class RankedQueueManager extends QueueManager implements Listener {
 			return;
 		}
 
-		int fullServers = 0;
 		GameServer transferred = null;
 
 		for(GameServer queueServer : manager.queueServers) {
-			if(queueServer.getPlayerCount() >= queueServer.maxPlayers) {
-				fullServers++;
+			if(queueServer.getPlayerCount() > 0) {
 				continue;
 			}
 
@@ -61,23 +62,25 @@ public class RankedQueueManager extends QueueManager implements Listener {
 		}
 
 		if(transferred != null) {
+			PluginMessage message = new PluginMessage();
+			message.writeString("SET RANKED");
+			message.setIntendedServer(transferred.getName()).send();
+
 			queueServers.add(transferred);
 			manager.queueServers.remove(transferred);
 			manager.callForServer();
-
-			//TODO: Tell server its ranked now
+		} else {
+			player.sendMessage(TextComponent.fromLegacyText(ChatColor.RED +
+					"All servers are currently full, please try again later"));
 		}
 
 		queuePreference.remove(player.getUniqueId());
-
-		if(fullServers == manager.queueServers.size()) {
-			player.sendMessage(TextComponent.fromLegacyText(ChatColor.RED +
-					"All servers are currently full, please try again later"));
-		} else if(fullServers == manager.queueServers.size() - 1 && waitingServers.isEmpty()) callForServer();
 	}
 
 	@EventHandler
 	public void onMessage(MessageEvent event) {
+		super.onMessage(event);
+
 		PluginMessage message = event.getMessage();
 		List<String> strings = message.getStrings();
 
@@ -88,6 +91,24 @@ public class RankedQueueManager extends QueueManager implements Listener {
 			ServerType type = ServerType.valueOf(strings.get(2));
 
 			queuePreference.put(playerUUID, type);
+		}
+
+		if(strings.get(0).equals("LOCK PLAYERS")) {
+			strings.remove(0);
+			for(String string : strings) {
+				UUID uuid = UUID.fromString(string);
+
+				if(!lockedPlayers.contains(uuid)) lockedPlayers.add(uuid);
+			}
+		}
+
+		if(strings.get(0).equals("UNLOCK PLAYERS")) {
+			strings.remove(0);
+			for(String string : strings) {
+				UUID uuid = UUID.fromString(string);
+
+				lockedPlayers.remove(uuid);
+			}
 		}
 	}
 }

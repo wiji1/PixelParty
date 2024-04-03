@@ -35,7 +35,10 @@ public class PixelPlayer {
 	public transient List<Pair<Integer, Integer>> loadedChunks = new ArrayList<>();
 
 	public PixelPlayer(Player player) {
-		this.uuid = player.getUniqueId();
+		this(player.getUniqueId());
+	}
+	public PixelPlayer(UUID uuid) {
+		this.uuid = uuid;
 
 		pixelPlayers.add(this);
 
@@ -147,12 +150,16 @@ public class PixelPlayer {
 	}
 
 	public static PixelPlayer getPixelPlayer(Player player) {
+		return getPixelPlayer(player.getUniqueId());
+	}
+
+	public static PixelPlayer getPixelPlayer(UUID uuid) {
 		for(PixelPlayer pixelPlayer : pixelPlayers) {
-			if(pixelPlayer.uuid.equals(player.getUniqueId())) {
+			if(pixelPlayer.uuid.equals(uuid)) {
 				return pixelPlayer;
 			}
 		}
 
-		return new PixelPlayer(player);
+		return new PixelPlayer(uuid);
 	}
 }

@@ -72,7 +72,7 @@ public class LeaderboardData {
 
 				String name = LeaderboardStatistic.values()[i].sqlName;
 
-				statistics[i] = exists ? rs.getInt(name) : 0;
+				statistics[i] = exists ? rs.getInt(name) : LeaderboardStatistic.values()[i].defaultValue;
 				positions[i] = exists ? table.getPosition(new Field(name), new Constraint("uuid",
 						pixelPlayer.uuid.toString())) : -1;
 			}

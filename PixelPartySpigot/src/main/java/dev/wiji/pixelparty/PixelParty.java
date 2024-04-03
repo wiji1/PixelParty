@@ -57,27 +57,27 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 		getServer().getPluginManager().registerEvents(new PacketManager(), this);
 		getServer().getPluginManager().registerEvents(new HologramManager(), this);
 		getServer().getPluginManager().registerEvents(new PlayerDataManager(), this);
-		getServer().getPluginManager().registerEvents(new LeaderboardManager(), this);
-
-		getCommand("menu").setExecutor(new MenuCommand());
-
-		if(serverType == ServerType.LOBBY) {
-			getServer().getPluginManager().registerEvents(new LobbyManager(), this);
-			return;
-		}
 
 		if(serverType == ServerType.PRACTICE) {
 			getServer().getPluginManager().registerEvents(new PracticeManager(), this);;
 		}
 
-		AmbienceManager.init();
 		adventure = BukkitAudiences.create(this);
+
+		if(serverType == ServerType.LOBBY) getServer().getPluginManager().registerEvents(new LobbyManager(), this);
+		getServer().getPluginManager().registerEvents(new LeaderboardManager(), this);
+		if(serverType == ServerType.LOBBY) return;
+
 		gameManager = new GameManager();
+
+		getCommand("menu").setExecutor(new MenuCommand());
+		AmbienceManager.init();
 
 		getCommand("test").setExecutor(new TestCommand());
 		getServer().getPluginManager().registerEvents(new ScoreboardHandler(), this);
 		getServer().getPluginManager().registerEvents(new PowerUpManager(), this);
 		getServer().getPluginManager().registerEvents(new SpectatorManager(), this);
+		getServer().getPluginManager().registerEvents(gameManager, this);
 
 		registerFloors();
 		registerPowerUps();

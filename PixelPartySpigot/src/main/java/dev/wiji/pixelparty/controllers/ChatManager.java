@@ -1,5 +1,11 @@
 package dev.wiji.pixelparty.controllers;
 
+import dev.wiji.pixelparty.PixelParty;
+import dev.wiji.pixelparty.enums.LeaderboardStatistic;
+import dev.wiji.pixelparty.enums.LeaderboardType;
+import dev.wiji.pixelparty.enums.ServerType;
+import dev.wiji.pixelparty.leaderboard.Leaderboard;
+import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import org.bukkit.Bukkit;
@@ -15,8 +21,15 @@ public class ChatManager implements Listener {
         event.setCancelled(true);
 
         String originalMessage = event.getMessage();
+        PixelPlayer player = PixelPlayer.getPixelPlayer(event.getPlayer());
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',
+        int elo = player.getLeaderboardStat(LeaderboardType.LIFETIME,
+                PixelParty.serverType == ServerType.NORMAL ? LeaderboardStatistic.NORMAL_ELO : LeaderboardStatistic.HYPER_ELO);
+
+        String eloString = "&e" + elo + " ";
+        boolean ranked = PixelParty.gameManager.ranked;
+
+        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', (ranked ? eloString : "") +
                 MetaDataUtil.getNameAndRank(event.getPlayer().getUniqueId()) + "&f: " + originalMessage));
     }
 

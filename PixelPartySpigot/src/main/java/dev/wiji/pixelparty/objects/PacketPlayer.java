@@ -88,7 +88,10 @@ public abstract class PacketPlayer implements Listener {
 
 		CustomPlayer customPlayer = new CustomPlayer(MinecraftServer.getServer(), server, gameProfile, new PlayerInteractManager(world), id);
 
-		Location loc = getLocation();
+		Location quickSpawn = player.getLocation();
+		quickSpawn.add(0, 0, -0.5);
+
+		Location loc = getLocation().getBlockZ() < 0 ? quickSpawn : getLocation();
 
 		customPlayer.setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
 		customPlayer.yaw = loc.getYaw();
@@ -126,6 +129,25 @@ public abstract class PacketPlayer implements Listener {
 		co.sendPacket(new PacketPlayOutScoreboardTeam(team, playerToAdd, 3));
 
 		spawningPlayers.add(player.getUniqueId());
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if(getLocation().getBlockZ() > 0) return;
+
+				Location loc = getLocation();
+
+				customPlayer.setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+				customPlayer.yaw = loc.getYaw();
+				customPlayer.pitch = loc.getPitch();
+
+				PacketPlayOutEntityTeleport teleport = new PacketPlayOutEntityTeleport(customPlayer);
+				co.sendPacket(teleport);
+				PacketPlayOutEntityHeadRotation headRotation = new PacketPlayOutEntityHeadRotation(customPlayer, (byte) (loc.getYaw() * 256 / 360));
+				co.sendPacket(headRotation);
+			}
+		}.runTaskLater(PixelParty.INSTANCE, 10L);
+
 		new BukkitRunnable() {
 			@Override
 			public void run() {

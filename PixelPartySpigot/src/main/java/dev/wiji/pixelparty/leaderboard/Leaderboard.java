@@ -76,6 +76,4 @@ public class Leaderboard {
 
 		hologram.setClickable(true);
 	}
-
-
 }

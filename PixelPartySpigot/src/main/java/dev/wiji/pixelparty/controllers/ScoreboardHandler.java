@@ -100,8 +100,11 @@ public class ScoreboardHandler implements Listener {
 	}
 
 	public List<String> getLobbyScoreboard() {
+		GameManager game = PixelParty.gameManager;
 		List<String> scoreboard = new ArrayList<>();
 		scoreboard.add(getDate());
+		scoreboard.add(" ");
+		scoreboard.add("&7Mode: " + Misc.color(PixelParty.serverType.displayName + (game.ranked ? " &cRanked" : "")));
 		scoreboard.add(" ");
 		scoreboard.add("&fPlayers: &a" + game.queueManager.queuedPlayers.size() + "/" + QueueManager.MAX_PLAYERS);
 		scoreboard.add("  ");

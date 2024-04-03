@@ -3,29 +3,29 @@ package dev.wiji.pixelparty.util;
 import java.util.*;
 import java.lang.*;
 
-class ELOMatch {
-    private final ArrayList<ELOPlayer> players = new ArrayList<>();
+public class ELOMatch {
+    public final ArrayList<ELOPlayer> players = new ArrayList<>();
 
-    public void addPlayer(String name, int place, int elo) {
+    public void addPlayer(UUID name, int place, int elo) {
         ELOPlayer player = new ELOPlayer();
         
-        player.name = name;
+        player.uuid = name;
         player.place = place;
         player.eloPre = elo;
         
         players.add(player);
     }
 
-    public int getELO(String name) {
+    public int getELO(UUID name) {
         for(ELOPlayer p : players) {
-            if(Objects.equals(p.name, name)) return p.eloPost;
+            if(Objects.equals(p.uuid, name)) return p.eloPost;
         }
-        return 1500;
+        return 1000;
     }
 
-    public int getELOChange(String name) {
+    public int getELOChange(UUID name) {
         for(ELOPlayer p : players) {
-            if(Objects.equals(p.name, name)) return p.eloChange;
+            if(Objects.equals(p.uuid, name)) return p.eloChange;
         }
         return 0;
     }
@@ -59,7 +59,7 @@ class ELOMatch {
     }
 
     public static class ELOPlayer {
-        public String name;
+        public UUID uuid;
 
         public int place = 0;
         public int eloPre = 0;

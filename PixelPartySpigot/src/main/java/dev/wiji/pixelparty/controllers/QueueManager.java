@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,14 +79,13 @@ public class QueueManager implements Listener {
 		//Used for practice mode to determine who created the game instance.
 		if(PixelParty.owner == null) PixelParty.owner = event.getPlayer();
 
-		event.setJoinMessage(null);
-
 		if(PixelParty.serverType != ServerType.PRACTICE && PixelParty.gameManager.gameState != GameManager.GameState.LOBBY) return;
 
 		event.getPlayer().teleport(SPAWN_LOCATION);
 		SpectatorManager.giveLobbyButton(event.getPlayer());
 		if(PixelParty.serverType == ServerType.PRACTICE) PracticeManager.givePrivacyItemStack(event.getPlayer());
 
+		event.setJoinMessage(null);
 
 		queuedPlayers.add(event.getPlayer().getUniqueId());
 		Misc.broadcast(MetaDataUtil.getDisplayName(event.getPlayer()) + "&e has joined (&b" +

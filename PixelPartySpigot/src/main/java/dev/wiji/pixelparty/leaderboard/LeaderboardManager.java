@@ -65,7 +65,6 @@ public class LeaderboardManager implements Listener {
 
 		LeaderboardStatistic stat;
 
-
 		switch(serverType) {
 			case LOBBY:
 				stat = null;
@@ -202,6 +201,10 @@ public class LeaderboardManager implements Listener {
 		}
 
 		return positions;
+	}
+
+	public static void setDefaultStatistic(LeaderboardStatistic statistic) {
+		leaderboards.forEach(leaderboard -> leaderboard.defaultStatistic = statistic);
 	}
 
 	public static class LeaderboardStorage {

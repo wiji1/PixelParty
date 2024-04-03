@@ -2,21 +2,26 @@ package dev.wiji.pixelparty.controllers;
 
 import de.tr7zw.nbtapi.NBTItem;
 import dev.wiji.pixelparty.PixelParty;
-import dev.wiji.pixelparty.enums.GameSound;
-import dev.wiji.pixelparty.enums.LeaderboardStatistic;
-import dev.wiji.pixelparty.enums.NBTTag;
-import dev.wiji.pixelparty.enums.ServerType;
+import dev.wiji.pixelparty.enums.*;
+import dev.wiji.pixelparty.events.MessageEvent;
+import dev.wiji.pixelparty.leaderboard.LeaderboardManager;
 import dev.wiji.pixelparty.messaging.PluginMessage;
 import dev.wiji.pixelparty.objects.PowerUp;
 import dev.wiji.pixelparty.objects.PracticeProfile;
+import dev.wiji.pixelparty.playerdata.LeaderboardData;
 import dev.wiji.pixelparty.playerdata.PixelPlayer;
 import dev.wiji.pixelparty.util.Color;
+import dev.wiji.pixelparty.util.ELOMatch;
+import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -24,11 +29,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-public class GameManager {
+public class GameManager implements Listener {
 	public static final int MAX_ROUNDS = 25;
 
 	public final FloorManager floorManager;
@@ -38,12 +41,15 @@ public class GameManager {
 	public final MusicManager musicManager;
 
 	public List<UUID> alivePlayers = new ArrayList<>();
+	public Map<UUID, Integer> placementMap = new HashMap<>();
 
 	public List<PowerUp.PowerUpPickup> powerUps = new ArrayList<>();
 
 	public GameState gameState;
 	public int round = 0;
 	public double speed = 5;
+
+	public boolean ranked = false;
 
 	public BukkitTask runnable = null;
 
@@ -74,9 +80,13 @@ public class GameManager {
 
 		ScoreboardHandler.setupTeams();
 
+		PluginMessage lock = new PluginMessage().writeString("LOCK PLAYERS");
 		for(UUID alivePlayer : queueManager.queuedPlayers) {
 			registerPlayer(Bukkit.getPlayer(alivePlayer));
+
+			lock.writeString(alivePlayer.toString());
 		}
+		if(ranked) lock.send();
 
 		AmbienceManager.setNight();
 
@@ -86,6 +96,8 @@ public class GameManager {
 
 	public void registerPlayer(Player player) {
 		alivePlayers.add(player.getUniqueId());
+		placementMap.put(player.getUniqueId(), -1);
+
 		player.getInventory().clear();
 		spawnPlayer(player);
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1, false, false));
@@ -135,6 +147,42 @@ public class GameManager {
 
 		for(PowerUp.PowerUpPickup powerUp : new ArrayList<>(powerUps)) powerUp.remove();
 
+		if(ranked && round < 15) Bukkit.broadcastMessage(Misc.color("&7&oYour ELO was not effected since the game ended before round 15."));
+		else if(ranked) {
+
+			LeaderboardStatistic statistic = PixelParty.serverType == ServerType.NORMAL ?
+					LeaderboardStatistic.NORMAL_ELO : LeaderboardStatistic.HYPER_ELO;
+
+			ELOMatch match = new ELOMatch();
+			for(Map.Entry<UUID, Integer> entry : placementMap.entrySet()) {
+				UUID uuid = entry.getKey();
+				PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(uuid);
+
+				int place = entry.getValue() == -1 ? 1 : entry.getValue();
+
+				match.addPlayer(uuid, place, pixelPlayer.getLeaderboardStat(LeaderboardType.LIFETIME, statistic));
+			}
+
+			match.calculateELOs();
+
+			PluginMessage unlock = new PluginMessage().writeString("UNLOCK PLAYERS");
+			for(UUID uuid : placementMap.keySet()) {
+				PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(uuid);
+				unlock.writeString(uuid.toString());
+
+				for(LeaderboardData leaderboardDatum : pixelPlayer.leaderboardData) {
+					int newElo = match.getELO(uuid);
+					leaderboardDatum.setValue(statistic, newElo);
+				}
+
+				pixelPlayer.save();
+			}
+
+			unlock.send();
+			sendEloUpdateMessage(match);
+		}
+
+
 		for(UUID alivePlayer : alivePlayers) {
 			Player player = Bukkit.getPlayer(alivePlayer);
 			spawnPlayer(player);
@@ -156,14 +204,14 @@ public class GameManager {
 			}
 		}
 
+		TitleManager.displayEndTitle();
+
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				sendGameEnd();
 			}
 		}.runTaskLater(PixelParty.INSTANCE, 20 * 10);
-
-		TitleManager.displayEndTitle();
 	}
 
 	public void countDown(double seconds) {
@@ -309,6 +357,21 @@ public class GameManager {
 		}
 	}
 
+	@EventHandler
+	public void onMessage(MessageEvent event) {
+		PluginMessage message = event.getMessage();
+		List<String> strings = message.getStrings();
+
+		if(strings.size() < 1) return;
+		if(strings.get(0).equals("SET RANKED")) {
+			LeaderboardStatistic statistic = PixelParty.serverType == ServerType.NORMAL ?
+					LeaderboardStatistic.NORMAL_ELO : LeaderboardStatistic.HYPER_ELO;
+
+			LeaderboardManager.setDefaultStatistic(statistic);
+			ranked = true;
+		}
+	}
+
 	public void setPlayerExperience(float progress) {
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			player.setExp(progress);
@@ -319,6 +382,19 @@ public class GameManager {
 		PluginMessage response = new PluginMessage();
 		response.writeString("GAME END");
 		response.send();
+	}
+
+	public void sendEloUpdateMessage(ELOMatch match) {
+		Bukkit.broadcastMessage(Misc.color("&e&m------------&r &bELO Update &e&m------------"));
+		for(ELOMatch.ELOPlayer player : match.players) {
+
+			int eloChange = match.getELOChange(player.uuid);
+			ChatColor color = eloChange > 0 ? ChatColor.GREEN : ChatColor.RED;
+			String change = color + (eloChange > 0 ? "+" : "") + eloChange;
+
+			Bukkit.broadcastMessage(MetaDataUtil.getDisplayName(player.uuid) + Misc.color(" &7- &e" + match.getELO(player.uuid)+ " &7(" + change + "&7)"));
+		}
+		Bukkit.broadcastMessage(Misc.color("&e&m--------------------------------------"));
 	}
 
 	public double getRoundSpeed(int round) {

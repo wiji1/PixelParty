@@ -96,6 +96,11 @@ public class LobbyManager implements Listener {
 			}
 
 			@Override
+			public List<String> getHologramText() {
+				return Collections.singletonList("&e" + playerCounts.get(ServerType.RANKED) + " Playing");
+			}
+
+			@Override
 			public void onRightClick(Player player) {
 				RankedGUI gui = new RankedGUI(player);
 				gui.open();

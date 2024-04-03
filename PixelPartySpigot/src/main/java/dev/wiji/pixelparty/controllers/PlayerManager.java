@@ -202,7 +202,11 @@ public class PlayerManager implements Listener {
 	public void killPlayer(Player player, DeathCause cause) {
 		player.getWorld().strikeLightningEffect(player.getLocation());
 		player.teleport(QueueManager.SPAWN_LOCATION);
-		PixelParty.gameManager.alivePlayers.remove(player.getUniqueId());
+
+		GameManager manager = PixelParty.gameManager;
+		manager.placementMap.put(player.getUniqueId(), manager.alivePlayers.size());
+		manager.alivePlayers.remove(player.getUniqueId());
+
 		player.getInventory().clear();
 		ScoreboardHandler.setToDeadTeam(player);
 		SpectatorManager.setSpectator(player);
