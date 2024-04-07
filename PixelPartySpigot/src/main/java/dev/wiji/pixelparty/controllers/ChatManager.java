@@ -27,7 +27,7 @@ public class ChatManager implements Listener {
                 PixelParty.serverType == ServerType.NORMAL ? LeaderboardStatistic.NORMAL_ELO : LeaderboardStatistic.HYPER_ELO);
 
         String eloString = "&e" + elo + " ";
-        boolean ranked = PixelParty.gameManager.ranked;
+        boolean ranked = PixelParty.serverType != ServerType.LOBBY && PixelParty.gameManager.ranked;
 
         Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', (ranked ? eloString : "") +
                 MetaDataUtil.getNameAndRank(event.getPlayer().getUniqueId()) + "&f: " + originalMessage));
