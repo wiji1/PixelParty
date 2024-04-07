@@ -139,6 +139,8 @@ public class PlayerManager implements Listener {
 	@EventHandler
 	public void onClick(PlayerInteractEvent event) {
 		if(event.getClickedBlock() == null) return;
+		GameManager game = PixelParty.gameManager;
+		if(!game.alivePlayers.contains(event.getPlayer().getUniqueId())) return;
 
 		for(PowerUp.PowerUpPickup powerUp : PixelParty.gameManager.powerUps) {
 			if(powerUp.location.equals(event.getClickedBlock().getLocation())) {

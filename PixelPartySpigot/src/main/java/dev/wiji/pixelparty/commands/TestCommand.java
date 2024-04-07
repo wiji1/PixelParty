@@ -15,15 +15,15 @@ public class TestCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
 
+		Player players = (Player) commandSender;
+		if(!players.getName().equals("wiji1")) return false;
+
 		if(args.length == 0) {
 			if(Bukkit.getOnlinePlayers().size() == 1) PixelParty.gameManager.startGame();
 			else PixelParty.gameManager.queueManager.startTimer();
 //			PixelParty.INSTANCE.gameManager.startGame();
 		}
 
-		if(args.length == 1) {
-			Player player = (Player) commandSender;
-		}
 
 		if(args.length == 2) {
 			player.stop();

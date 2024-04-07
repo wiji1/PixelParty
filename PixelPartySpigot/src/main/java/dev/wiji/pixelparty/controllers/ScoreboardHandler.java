@@ -105,11 +105,11 @@ public class ScoreboardHandler implements Listener {
 		scoreboard.add(getDate());
 		scoreboard.add(" ");
 		scoreboard.add("&fMode: " + Misc.color(PixelParty.serverType.displayName + (game.ranked ? " &cRanked" : "")));
-		scoreboard.add(" ");
-		scoreboard.add("&fPlayers: &a" + game.queueManager.queuedPlayers.size() + "/" + QueueManager.MAX_PLAYERS);
 		scoreboard.add("  ");
-		scoreboard.add(game.queueManager.timer == null ? "Waiting..." : "Starting in &a" + game.queueManager.seconds + "s");
+		scoreboard.add("&fPlayers: &a" + game.queueManager.queuedPlayers.size() + "/" + QueueManager.MAX_PLAYERS);
 		scoreboard.add("   ");
+		scoreboard.add(game.queueManager.timer == null ? "Waiting..." : "Starting in &a" + game.queueManager.seconds + "s");
+		scoreboard.add("    ");
 		scoreboard.add(getFooter());
 
 		return scoreboard;

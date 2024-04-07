@@ -23,7 +23,7 @@ public class PixelVillager extends EntityVillager {
 
 				getNavigation().a(a, b, c, 2.0);
 			}
-		}.runTaskTimer(PixelParty.INSTANCE, 0, 1);
+		}.runTaskTimer(PixelParty.INSTANCE, 0, 10);
 	}
 
 	public void remove() {

@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerManager {
-	public static final int STARTING_PORT = Integer.parseInt(BungeeMain.INSTANCE.getConfigOption("starting-port"));
-	public static final int MAX_PORT = Integer.parseInt(BungeeMain.INSTANCE.getConfigOption("max-port"));
+	public static final int STARTING_PORT = BungeeMain.INSTANCE.getConfiguration().getInt("starting-port");
+	public static final int MAX_PORT = BungeeMain.INSTANCE.getConfiguration().getInt("max-port");
 
 	public static List<GameServer> gameServers = new ArrayList<>();
 

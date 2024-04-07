@@ -147,8 +147,7 @@ public class GameManager implements Listener {
 
 		for(PowerUp.PowerUpPickup powerUp : new ArrayList<>(powerUps)) powerUp.remove();
 
-		if(ranked && round < 15) Bukkit.broadcastMessage(Misc.color("&7&oYour ELO was not effected since the game ended before round 15."));
-		else if(ranked) {
+		if(ranked) {
 
 			LeaderboardStatistic statistic = PixelParty.serverType == ServerType.NORMAL ?
 					LeaderboardStatistic.NORMAL_ELO : LeaderboardStatistic.HYPER_ELO;
@@ -170,6 +169,8 @@ public class GameManager implements Listener {
 				PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(uuid);
 				unlock.writeString(uuid.toString());
 
+				if(round < 15) continue;
+
 				for(LeaderboardData leaderboardDatum : pixelPlayer.leaderboardData) {
 					int newElo = match.getELO(uuid);
 					leaderboardDatum.setValue(statistic, newElo);
@@ -179,7 +180,8 @@ public class GameManager implements Listener {
 			}
 
 			unlock.send();
-			sendEloUpdateMessage(match);
+			if(round < 15) Bukkit.broadcastMessage(Misc.color("&7&oYour ELO was not effected since the game ended before round 15."));
+			else sendEloUpdateMessage(match);
 		}
 
 
@@ -259,7 +261,7 @@ public class GameManager implements Listener {
 					alertCount++;
 				}
 
-				if(ticks == ((seconds * 20) + paddedTime) + 60) {
+				if(ticks == ((seconds * 20) + paddedTime) + ((60 - paddedTime) + 3) - 10) {
 					for(PowerUp powerUp : PowerUp.powerUps) powerUp.onRoundEnd();
 					nextRound();
 					cancel();

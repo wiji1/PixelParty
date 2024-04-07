@@ -25,7 +25,7 @@ import java.util.UUID;
 
 public class QueueManager implements Listener {
 	public static final int MAX_PLAYERS = 16;
-	public static final int START_THRESHOLD = 10;
+	public static final int START_THRESHOLD = 2;
 
 	public static final Location SPAWN_LOCATION = new Location(Bukkit.getWorld("world"), -46, 4.5, 0, -90, 0);
 
