@@ -14,6 +14,10 @@ import java.util.List;
 public class Pumpkin extends PowerUp {
 	public List<Player> pumpkinPlayers = new ArrayList<>();
 
+	public Pumpkin() {
+		super("Pumpkin");
+	}
+
 	@Override
 	public void onActivate(Player player, Location location) {
 		pumpkinPlayers.add(player);

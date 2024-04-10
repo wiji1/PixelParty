@@ -24,6 +24,10 @@ import java.util.List;
 
 public class SpeedPotion extends PowerUp {
 
+	public SpeedPotion() {
+		super("SpeedPotion");
+	}
+
 	@Override
 	public void onActivate(Player player, Location location) {
 		Potion potion = new Potion(PotionType.SPEED, 2);

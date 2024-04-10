@@ -1,6 +1,7 @@
 package dev.wiji.pixelparty;
 
 import dev.wiji.pixelparty.commands.MenuCommand;
+import dev.wiji.pixelparty.commands.PwpCommand;
 import dev.wiji.pixelparty.commands.TestCommand;
 import dev.wiji.pixelparty.controllers.*;
 import dev.wiji.pixelparty.enums.ServerType;
@@ -71,11 +72,12 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 		gameManager = new GameManager();
 
 		getCommand("menu").setExecutor(new MenuCommand());
+		getCommand("test").setExecutor(new TestCommand());
+		getCommand("pwp").setExecutor(new PwpCommand());
+
 		AmbienceManager.init();
 
-		getCommand("test").setExecutor(new TestCommand());
 		getServer().getPluginManager().registerEvents(new ScoreboardHandler(), this);
-		getServer().getPluginManager().registerEvents(new PowerUpManager(), this);
 		getServer().getPluginManager().registerEvents(new SpectatorManager(), this);
 		getServer().getPluginManager().registerEvents(gameManager, this);
 

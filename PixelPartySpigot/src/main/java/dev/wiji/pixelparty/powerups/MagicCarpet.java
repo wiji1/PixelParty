@@ -22,6 +22,8 @@ public class MagicCarpet extends PowerUp {
 	public FloorManager manager = PixelParty.gameManager.floorManager;
 
 	public MagicCarpet() {
+		super("MagicCarpet");
+
 		new BukkitRunnable() {
 			@Override
 			public void run() {

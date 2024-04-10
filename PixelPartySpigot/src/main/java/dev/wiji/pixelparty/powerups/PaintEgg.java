@@ -25,8 +25,11 @@ import java.util.List;
 
 public class PaintEgg extends PowerUp {
 
-	public 	FloorManager floorManager = PixelParty.gameManager.floorManager;
+	public FloorManager floorManager = PixelParty.gameManager.floorManager;
 
+	public PaintEgg() {
+		super("PaintEgg");
+	}
 
 	@Override
 	public void onActivate(Player player, Location location) {

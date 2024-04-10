@@ -18,7 +18,9 @@ public class Villagers extends PowerUp {
 	List<PixelVillager> villagers = new ArrayList<>();
 	FloorManager manager = PixelParty.gameManager.floorManager;
 
-	public  Villagers() {
+	public Villagers() {
+		super("Villagers");
+
 		Misc.registerEntity("PixelVillager", 120, PixelVillager.class);
 	}
 

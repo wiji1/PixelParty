@@ -2,7 +2,6 @@ package dev.wiji.pixelparty.commands;
 
 import dev.wiji.pixelparty.PixelParty;
 import net.raphimc.noteblocklib.player.SongPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,9 +18,8 @@ public class TestCommand implements CommandExecutor {
 		if(!players.getName().equals("wiji1")) return false;
 
 		if(args.length == 0) {
-			if(Bukkit.getOnlinePlayers().size() == 1) PixelParty.gameManager.startGame();
-			else PixelParty.gameManager.queueManager.startTimer();
-//			PixelParty.INSTANCE.gameManager.startGame();
+			PixelParty.gameManager.queueManager.timer.cancel();
+			PixelParty.gameManager.startGame();
 		}
 
 

@@ -14,6 +14,10 @@ import java.util.Random;
 
 public class Barriers extends PowerUp {
 
+	public Barriers() {
+		super("Barriers");
+	}
+
 	public List<Location> barrierLocations = new ArrayList<>();
 
 	@Override

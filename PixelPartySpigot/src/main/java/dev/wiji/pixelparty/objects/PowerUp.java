@@ -14,6 +14,11 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class PowerUp implements Listener {
+	public String refName;
+
+	public PowerUp(String refName) {
+		this.refName = refName;
+	}
 
 	public static List<PowerUp> powerUps = new ArrayList<>();
 
@@ -53,7 +58,6 @@ public abstract class PowerUp implements Listener {
 		}
 
 		public void onInteract(Player player) {
-			//Get random powerup
 			PowerUp powerUp = powerUps.get(new Random().nextInt(powerUps.size()));
 			powerUp.onActivate(player, location);
 

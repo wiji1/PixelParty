@@ -23,6 +23,7 @@ public class ColorCow extends PowerUp {
 	FloorManager floorManager = PixelParty.gameManager.floorManager;
 
 	public ColorCow() {
+		super("ColorCow");
 		Misc.registerEntity("ColorCow", 96, PixelMooshroom.class);
 	}
 

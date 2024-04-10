@@ -31,6 +31,7 @@ public class DockerManager {
 
 		try {
 			dockerClient.killContainerCmd(containerID).exec();
+
 			System.out.println("Killed container " + containerID);
 		} catch(Exception e) {
 			System.out.println("Failed to kill container " + containerID);
@@ -39,6 +40,9 @@ public class DockerManager {
 		try {
 			dockerClient.removeContainerCmd(containerID).exec();
 			System.out.println("Removed container " + containerID);
+
+			dockerClient.pruneCmd(PruneType.VOLUMES).exec();
+			System.out.println("Pruned Volumes");
 		} catch(Exception e) {
 			System.out.println("Failed to remove container " + containerID);
 		}

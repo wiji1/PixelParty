@@ -29,6 +29,10 @@ import static dev.wiji.pixelparty.controllers.AmbienceManager.CENTER;
 
 public class AcidRain extends PowerUp {
 
+	public AcidRain() {
+		super("AcidRain");
+	}
+
 	@Override
 	public void onActivate(Player player, Location location) {
 		ItemStack acidRain = new ItemStack(Material.MAGMA_CREAM);

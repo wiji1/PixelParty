@@ -20,6 +20,10 @@ import java.util.List;
 
 public class EnderPearl extends PowerUp {
 
+	public EnderPearl() {
+		super("EnderPearl");
+	}
+
 	@Override
 	public void onActivate(Player player, Location location) {
 		ItemStack pearl = new ItemStack(Material.ENDER_PEARL);

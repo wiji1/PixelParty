@@ -10,7 +10,7 @@ public class PacketSendEvent extends Event implements Cancellable {
 	private static final HandlerList HANDLERS = new HandlerList();
 
 	private final Player player;
-	private final Object packet;
+	private Object packet;
 	private final PacketType packetType;
 
 	private boolean cancelled = false;
@@ -27,6 +27,10 @@ public class PacketSendEvent extends Event implements Cancellable {
 
 	public Object getPacket() {
 		return packet;
+	}
+
+	public void setPacket(Object packet) {
+		this.packet = packet;
 	}
 
 	public PacketType getPacketType() {

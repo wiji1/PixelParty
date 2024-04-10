@@ -17,7 +17,6 @@ import dev.wiji.pixelparty.util.Misc;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -326,14 +325,16 @@ public class GameManager implements Listener {
 		nbtItem.setBoolean(NBTTag.COLOR_BLOCK.getRef(), true);
 
 		for(UUID alivePlayer : alivePlayers) {
+			ItemStack item = itemStack.clone();
+
 			Player player = Bukkit.getPlayer(alivePlayer);
 			PixelPlayer pixelPlayer = PixelPlayer.getPixelPlayer(player);
 
-			if(pixelPlayer.woolFloor) itemStack.setType(Material.WOOL);
+			if(pixelPlayer.woolFloor) item.setType(Material.WOOL);
 
 			if(PracticeManager.isInSettings(player)) continue;
 
-			player.getInventory().setItem(8, itemStack);
+			player.getInventory().setItem(8, item);
 		}
 	}
 

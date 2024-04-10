@@ -9,6 +9,10 @@ import java.util.Random;
 
 public class Teleport extends PowerUp {
 
+	public Teleport() {
+		super("Teleport");
+	}
+
 	@Override
 	public void onActivate(Player player, Location location) {
 		Random random = new Random();

@@ -12,6 +12,10 @@ public class Hunger extends PowerUp {
 
 	List<Player> hungerPlayers = new ArrayList<>();
 
+	public Hunger() {
+		super("Hunger");
+	}
+
 	@Override
 	public void onActivate(Player player, Location location) {
 		hungerPlayers.add(player);

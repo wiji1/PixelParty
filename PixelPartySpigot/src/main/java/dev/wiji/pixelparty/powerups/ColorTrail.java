@@ -18,6 +18,7 @@ public class ColorTrail extends PowerUp {
 	public List<Block> lastModifiedBlocks = new ArrayList<>();
 
 	public ColorTrail() {
+		super("ColorTrail");
 		new BukkitRunnable() {
 			@Override
 			public void run() {

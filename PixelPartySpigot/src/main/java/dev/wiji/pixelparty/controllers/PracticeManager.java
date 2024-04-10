@@ -12,7 +12,6 @@ import dev.wiji.pixelparty.inventory.PrivacyGUI;
 import dev.wiji.pixelparty.objects.PracticeProfile;
 import dev.wiji.pixelparty.util.MetaDataUtil;
 import dev.wiji.pixelparty.util.Misc;
-import dev.wiji.pixelparty.util.SkinUtil;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -208,6 +207,8 @@ public class PracticeManager implements Listener {
 		}
 
 		if(nbtItem.hasKey(NBTTag.PRACTICE_SETTINGS.getRef())) {
+			if(settingsPlayers.contains(event.getPlayer().getUniqueId())) return;
+
 			giveSettingsItems(event.getPlayer());
 			GameSound.CLICK.play(event.getPlayer());
 			settingsPlayers.add(event.getPlayer().getUniqueId());

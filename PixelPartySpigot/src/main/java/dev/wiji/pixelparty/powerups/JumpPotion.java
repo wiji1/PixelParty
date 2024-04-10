@@ -21,6 +21,10 @@ import java.util.List;
 
 public class JumpPotion extends PowerUp {
 
+	public JumpPotion() {
+		super("JumpPotion");
+	}
+
 	@Override
 	public void onActivate(Player player, Location location) {
 		Potion potion = new Potion(PotionType.JUMP, 2);

@@ -22,6 +22,10 @@ import java.util.List;
 
 public class LeapFeather extends PowerUp {
 
+	public LeapFeather() {
+		super("LeapFeather");
+	}
+
 	@Override
 	public void onActivate(Player player, Location location) {
 		ItemStack feather = new ItemStack(Material.FEATHER);
