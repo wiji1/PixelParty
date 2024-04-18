@@ -69,6 +69,7 @@ public class DockerManager {
 		HostConfig hostConfig = HostConfig.newHostConfig()
 				.withPortBindings(portBindings)
 				.withBinds(globalBind, hostBind)
+				.withAutoRemove(true)
 				.withNetworkMode("host");
 
 		CreateContainerCmd createContainerCmd = dockerClient
