@@ -79,6 +79,7 @@ public class PixelParty extends JavaPlugin implements PixelPartyPlugin {
 
 		getServer().getPluginManager().registerEvents(new ScoreboardHandler(), this);
 		getServer().getPluginManager().registerEvents(new SpectatorManager(), this);
+//		getServer().getPluginManager().registerEvents(new AntiCheat(), this);
 		getServer().getPluginManager().registerEvents(gameManager, this);
 
 		registerFloors();

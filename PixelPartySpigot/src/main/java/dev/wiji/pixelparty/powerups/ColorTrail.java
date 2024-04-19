@@ -37,6 +37,8 @@ public class ColorTrail extends PowerUp {
 
 			Block block = blockLocation.getBlock();
 			if(lastModifiedBlocks.contains(block)) continue;
+			if(manager.chosenColor != null && manager.chosenColor.equals(manager.getBlockColor(block))) continue;
+
 			tempList.add(block);
 			manager.randomizeBlock(block);
 		}

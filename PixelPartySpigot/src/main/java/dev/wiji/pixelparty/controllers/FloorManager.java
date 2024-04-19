@@ -14,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftChunk;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -24,6 +25,8 @@ public class FloorManager {
 	public List<Floor> floors = new ArrayList<>();
 	public Floor startFloor;
 	public Floor endFloor;
+
+	public boolean buffer = false;
 
 	public boolean isVoid = false;
 
@@ -122,6 +125,7 @@ public class FloorManager {
 
 	public void fillVoid() {
 		isVoid = true;
+		buffer = true;
 
 		for(int i = 0; i < 64; i++) {
 			for(int j = 0; j < 64; j++) {
@@ -137,6 +141,13 @@ public class FloorManager {
 		}
 
 		updateChunks();
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				buffer = false;
+			}
+		}.runTaskLater(PixelParty.INSTANCE, 20);
 	}
 
 	private void updateChunks() {

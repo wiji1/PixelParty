@@ -2,6 +2,7 @@ package dev.wiji.pixelparty.controllers;
 
 import dev.wiji.pixelparty.PixelParty;
 import dev.wiji.pixelparty.enums.ServerType;
+import dev.wiji.pixelparty.events.PacketReceiveEvent;
 import dev.wiji.pixelparty.events.PacketSendEvent;
 import dev.wiji.pixelparty.misc.Pair;
 import dev.wiji.pixelparty.objects.PacketPlayer;
